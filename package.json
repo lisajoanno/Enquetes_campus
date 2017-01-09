@@ -1,0 +1,19 @@
+{
+  "name": "tzentzen",
+  "version": "1.0.0",
+  "description": "Projet Web",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lisajoanno/TzenTzen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lisajoanno/TzenTzen/issues"
+  },
+  "homepage": "https://github.com/lisajoanno/TzenTzen#readme"
+}
