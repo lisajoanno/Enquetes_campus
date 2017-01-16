@@ -141,7 +141,7 @@ angular.module('starter.controllers', [])
       data : $scope.answToSend,
       headers: { 'Content-type': 'application/json' }
     }).then(function successCallback(response) {
-      $scope.isCorrect = false;
+      $scope.isCorrect = response.data;
       if ($scope.isCorrect)
         document.getElementById("answer-input").className += " true-cadre";
       else
