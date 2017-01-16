@@ -1,0 +1,29 @@
+<ion-view view-title="Enigme">
+  <ion-content>
+
+    <div class="col col-80 col-offset-10">
+      <div class="item item-avatar">
+        <h2>{{selectedEnigme.titre}}</h2>
+        <p>{{selectedEnigme.point}} points</p>
+      </div>
+
+      <div class="item item-body">
+        <img class="full-image" src="../img/sherlock.jpg">
+        <p>
+          {{selectedEnigme.contenu}}
+        </p>
+        <div class="list">
+          <label class="item item-input item-floating-label" id="answer-input">
+            <input ng_model="answToSend.answer" type="text" placeholder="Votre réponse">
+          </label>
+          <br/>
+          <button class="button button-stable col col-50 col-offset-25" ng-click="sendAnswer()">
+            Envoyer
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+  </ion-content>
+</ion-view>

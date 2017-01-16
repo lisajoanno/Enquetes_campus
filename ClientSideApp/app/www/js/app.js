@@ -60,7 +60,20 @@ angular.module('starter', ['ionic', 'starter.controllers'])
           controller: 'EnigmesCtrl'
         }
       }
-    });
+    })
+
+
+    .state('app.enigme', {
+      url: '/enigme/:enigmeId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/enigme.html',
+          controller: 'EnigmeCtrl'
+        }
+      }
+    })
+
+    ;
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/carte');
 });
