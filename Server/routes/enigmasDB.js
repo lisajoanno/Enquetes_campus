@@ -30,29 +30,44 @@ var insertDocuments = function(db, callback) {
     collection.insertMany([
         {
             "id": 1,
-            "lat": 44.460970,
-            "lng": 4.746094,
+            "titre" : "Un jeu vraiment trop fun !",
+            "lat": 43.6210156491945,
+            "lng": 7.066354751586914,
             "image": "image.png",
-            "point" : 10
+            "point" : 10,
+            "contenu" : "A quel endroit correspond cette image ?"
         },
         {
             "id": 2,
-            "lat": 45.678,
-            "lng": 3.746094,
-            "image": "image.png",
-            "point" : 20
+            "titre" : "L'énigme du sphinx",
+            "lat": 43.61910809278851,
+            "lng": 7.0741868019104,
+            "image": "sphinx.png",
+            "point" : 20,
+            "contenu" : "Qu'est ce qui le matin marche à quatre pattes, le midi à deux et le soir à trois ?"
         },
         {
             "id": 3,
-            "lat": 48.460,
-            "lng": 5.76094,
-            "image": "image.png",
-            "point" : 15
+            "titre" : "Le retour du jeu vraiment super fun",
+            "lat": 43.61879740985583,
+            "lng": 7.062127590179443,
+            "image": "image2.png",
+            "point" : 15,
+            "contenu" : "A quel endroit correspond cette image ?"
+        },
+        {
+            "id": 4,
+            "titre" : "La seconde enigme du sphinx",
+            "lat": 43.62497969832218,
+            "lng": 7.073543071746826,
+            "image": "sphinx.png",
+            "point" : 40,
+            "contenu" : "La première engendre la seconde et la seconde engendre la première."
         }
     ], function(err, result) {
         assert.equal(err, null);
-        assert.equal(3, result.result.n);
-        assert.equal(3, result.ops.length);
+        assert.equal(4, result.result.n);
+        assert.equal(4, result.ops.length);
         console.log("Inserted 3 enigmas into the collection");
         callback(result);
     });
@@ -73,8 +88,6 @@ var findDocuments = function(db, callback) {
         //console.log("T : "+res);
         callback(res);
     });
-
-
 };
 
 /**

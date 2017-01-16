@@ -23,16 +23,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
-app.use('/access', accessEnigmas);
 
-// catch 404 and forward to error handler
+
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+  next();
 });
+
+
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -45,9 +45,22 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+app.use('/', index);
+app.use('/users', users);
+app.use('/access', accessEnigmas);
 
-var listener = app.listen(8888, function(){
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+var PORT = 8888;
+
+var listener = app.listen(PORT, function(){
   console.log('Listening on port ' + listener.address().port); //Listening on port 8888
 });
 
 module.exports = app;
+
