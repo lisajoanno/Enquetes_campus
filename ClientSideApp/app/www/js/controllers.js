@@ -31,7 +31,6 @@ angular.module('starter.controllers', [])
   //Affichage de la position
   $scope.position = {x : 0, y : 0};
   $scope.setPosition = function (givenPosition){
-    console.log("in set pos");
     $scope.position.x = givenPosition.coords.latitude;
     $scope.position.y = givenPosition.coords.longitude;
     var latlng = new google.maps.LatLng($scope.position.x, $scope.position.y);
@@ -85,18 +84,62 @@ angular.module('starter.controllers', [])
 
 
 .controller('EnigmesCtrl', function($scope, $stateParams, $http, $stateParams) {
-  $scope.enigmes;
-  //plusieurs énigmes ont la meme position -> meme groupe d'énigmes
-  $http({
-    method: 'GET',
-    url: 'http://10.212.118.204:8888/access',
-    headers: { 'Content-type': 'application/json' }
-  }).then(function successCallback(response) {
-    $scope.enigmes = response.data;
-  }, function errorCallback(response) {
-    console.log("Couldn't get enigma.");
-  });
+  $scope.position = {x : 0, y : 0};
+  $scope.setPosition = function (givenPosition){
+    $scope.position.x = givenPosition.coords.latitude;
+    $scope.position.y = givenPosition.coords.longitude;
+    //plusieurs énigmes ont la meme position -> meme groupe d'énigmes
+    $http({
+      method: 'GET',
+      url: 'http://10.212.118.204:8888/access',
+      headers: { 'Content-type': 'application/json' }
+    }).then(function successCallback(response) {
+      $scope.enigmes = response.data;
+      for (var enigme in $scope.enigmes) {
+        console.log(JSON.stringify($scope.enigmes[enigme].coo));
+        console.log(JSON.stringify($scope.position));
+        //coo???
 
+        var a = $scope.enigmes[enigme].coo;
+        var b = $scope.position;
+        var distance =  $scope.getDistanceFromLatLonInKm(a.lat,a.lng,b.x,b.y);
+        console.log("La distance entre l'énigme et l'user est de " + distance + " km");
+        if (distance<=0.150)
+          $scope.enigmes[enigme].isAvailable = true;
+        else
+          $scope.enigmes[enigme].isAvailable = false;
+      }
+    }, function errorCallback(response) {
+      console.log("Couldn't get enigma.");
+    });
+  };
+  $scope.showError = function (error){
+    console.log("Error - Couldn't find position - "+ error);
+  };
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition($scope.setPosition,$scope.showError);
+    //navigator.geolocation.getCurrentPosition($scope.setPosition,$scope.showError);
+  } else{
+    console.log("Geolocation is not supported by this browser.");
+  }
+
+  $scope.deg2rad = function(deg) {
+    return deg * (Math.PI/180)
+  }
+
+  $scope.getDistanceFromLatLonInKm = function(lat1,lon1,lat2,lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = $scope.deg2rad(lat2-lat1);  // deg2rad below
+    var dLon = $scope.deg2rad(lon2-lon1);
+    var a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos($scope.deg2rad(lat1)) * Math.cos($scope.deg2rad(lat2)) *
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+      ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c; // Distance in km
+    return d;
+  }
 })
 
 

@@ -4,10 +4,13 @@
     <div class="list card" ng-repeat="enigme in enigmes">
       <div class="card">
         <div class="item item-divider">
-          {{enigme.titre}}
+            <a class="button button-clear button-dark" ng-disable="{{enigme.isAvailable}}" href="#/app/enigme/{{enigme.id}}"> {{enigme.titre}} </a>
         </div>
         <div class="item item-text-wrap">
-          Gagnez {{enigme.point}} points!
+          <a ng-show="enigme.isAvailable" href="#/app/enigme/{{enigme.id}}"> Gagnez {{enigme.point}} points! </a>
+          <div ng-show="!enigme.isAvailable">
+            Vous n'êtes pas dans la bonne zone pour ouvrir cette énigme!
+          </div>
         </div>
       </div>
     </div>
