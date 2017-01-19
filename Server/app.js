@@ -80,6 +80,7 @@ io.sockets.on('connection', function (socket) {
         // echo to room that a person has connected to the room
         socket.broadcast.to('room').emit('updatechat', 'SERVER', username + ' has connected to the chat');
         socket.emit('updateusernames', usernames, 'username');
+        socket.broadcast.to('room').emit('updateusername', username, 'username');
     });
 
     // when the client emits 'sendchat', this listens and executes
@@ -96,6 +97,7 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('updateusers', usernames);
         // echo globally that this client has left
         socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
+        socket.broadcast.to('room').emit('removeuser', socket.username, 'username')
         socket.leave(socket.room);
     });
 });

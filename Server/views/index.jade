@@ -5,13 +5,20 @@ block content
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js")
 
     script.
-        var socket = io.connect('http://10.212.121.170:8888');
+        var socket = io.connect('http://10.212.123.252:8888');
         socket.on('connect', function(){
             socket.emit('adduser', prompt("What's your name?"));});
-        socket.on('updateusernames', function(usernames) {
-            for(u in usernames) {
+        socket.on('updateusernames', function (usernames) {
+            for (u in usernames) {
                 $('#liste-personnes').append('<b>' + u + '</b><br>');
             }
+        });
+        socket.on('updateusername', function(username) {
+            $('#liste-personnes').append('<b id=' + username + '>' + username + '<br></b>');
+        });
+        socket.on('removeuser', function(username) {
+            var elem = document.getElementById(username);
+            elem.parentNode.removeChild(elem);
         });
         socket.on('updatechat', function (username, data) {
             $('#conversation').append('<b>' + username + ':</b> ' + data + '<br>');
