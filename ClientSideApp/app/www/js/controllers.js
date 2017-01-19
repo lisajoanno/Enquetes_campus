@@ -12,11 +12,10 @@ angular.module('starter.controllers', [])
     $scope.connected= true;
   };
 
-
 })
 
 .controller('CarteCtrl', function($scope, $http) {
-  $scope.position = {x : 0, y : 0};
+ // $scope.position = {x : 0, y : 0};
 
   //Affichage de la carte (avec un position à Strasbourg par défaut)
   var centerpos = new google.maps.LatLng(48.579400,7.7519);
@@ -29,13 +28,13 @@ angular.module('starter.controllers', [])
   var map = new google.maps.Map(document.getElementById("map"), optionsGmaps);
   console.log(JSON.stringify($scope.enigmes));
 
-  //Affichage de la position de l'équipe
-  $scope.showPosition = function (position){
-    $scope.position.x = position.coords.latitude;
-    $scope.position.y = position.coords.longitude;
-
-    var latlng = new google.maps.LatLng(position.coords.latitude,
-      position.coords.longitude);
+  //Affichage de la position
+  $scope.position = {x : 0, y : 0};
+  $scope.setPosition = function (givenPosition){
+    console.log("in set pos");
+    $scope.position.x = givenPosition.coords.latitude;
+    $scope.position.y = givenPosition.coords.longitude;
+    var latlng = new google.maps.LatLng($scope.position.x, $scope.position.y);
 
     // Ajout d'un pointeur
     var marker = new google.maps.Marker({
@@ -45,20 +44,23 @@ angular.module('starter.controllers', [])
     });
     // centre la carte sur la position
     map.panTo(latlng);
+    //console.log(position.x + " - "+ position.y);
   };
   $scope.showError = function (error){
-    console.log("Coudln't find position");
+    console.log("Error - Couldn't find position - "+ error);
   };
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition($scope.showPosition,$scope.showError);
+    navigator.geolocation.watchPosition($scope.setPosition,$scope.showError);
+    //navigator.geolocation.getCurrentPosition($scope.setPosition,$scope.showError);
   } else{
     console.log("Geolocation is not supported by this browser.");
   }
 
+
   //Affichage de la position des énigmes
   $http({
     method: 'GET',
-    url: 'http://10.212.112.169:8888/access',
+    url: 'http://10.212.118.204:8888/access',
     headers: { 'Content-type': 'application/json' }
   }).then(function successCallback(response) {
     var enigmes = response.data;
@@ -80,31 +82,23 @@ angular.module('starter.controllers', [])
   });
 })
 
+
+
 .controller('EnigmesCtrl', function($scope, $stateParams, $http, $stateParams) {
   $scope.enigmes;
   //plusieurs énigmes ont la meme position -> meme groupe d'énigmes
   $http({
     method: 'GET',
-    url: 'http://10.212.112.169:8888/access',
+    url: 'http://10.212.118.204:8888/access',
     headers: { 'Content-type': 'application/json' }
   }).then(function successCallback(response) {
     $scope.enigmes = response.data;
-    console.log("j'ai récup les énigmes!");
   }, function errorCallback(response) {
     console.log("Couldn't get enigma.");
   });
 
-  //Si on est dans la page d'une enigme
-  if($stateParams.enigmeId!=null)
-  {
-    $scope.selectedEnigme;
-    for (var enigme in enigmes) {
-      if(enigme.id == $stateParams.enigmeId)
-        $scope.selectedEnigme = enigme;
-    }
-    console.log($stateParams.enigmeId)
-  }
 })
+
 
 
 .controller('EnigmeCtrl', function($scope, $stateParams, $http, $stateParams) {
@@ -119,7 +113,7 @@ angular.module('starter.controllers', [])
   //plusieurs énigmes ont la meme position -> meme groupe d'énigmes
   $http({
     method: 'GET',
-    url: 'http://10.212.112.169:8888/access',
+    url: 'http://10.212.118.204:8888/access',
     headers: { 'Content-type': 'application/json' }
   }).then(function successCallback(response) {
     var enigmes = response.data;
@@ -137,7 +131,7 @@ angular.module('starter.controllers', [])
   $scope.sendAnswer = function (){
     $http({
       method: 'POST',
-      url: 'http://10.212.112.169:8888/master',
+      url: 'http://10.212.118.204:8888/master',
       data : $scope.answToSend,
       headers: { 'Content-type': 'application/json' }
     }).then(function successCallback(response) {
@@ -150,5 +144,4 @@ angular.module('starter.controllers', [])
       console.log("Couldn't check answer");
     });
   };
-
 });

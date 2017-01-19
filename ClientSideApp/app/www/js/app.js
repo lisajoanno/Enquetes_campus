@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,8 +19,38 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
   });
 })
+
+  /*.factory('positionFactory', function() {
+    var posService = {};
+    var position= {};
+
+    setPosition = function (givenPosition){
+      position.x = givenPosition.coords.latitude;
+      position.y = givenPosition.coords.longitude;
+      console.log(position.x + " - "+ position.y);
+    };
+    showError = function (error){
+      console.log("Error - Couldn't find position");
+    };
+
+    posService.set = function() {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(setPosition,showError);
+       // navigator.geolocation.getCurrentPosition(setPosition,showError);
+      } else{
+        console.log("Geolocation is not supported by this browser.");
+      }
+
+    };
+    posService.get = function() {
+      return position;
+    };
+    return posService;
+  })*/
+
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
