@@ -75,11 +75,11 @@ exports.addAValidation = function (json, callback) {
 
 };
 
-var getValidations = function(db, callback) {
+var getAValidation = function(db, callback) {
     // Get the documents collection
     var collection = db.collection('documents');
     // Find some documents
-    collection.findOne({}, function(err, item) {
+    collection.findOne({"result":""}, function(err, item) {
         assert.equal(err, null);
         callback(item);
     });
@@ -99,8 +99,6 @@ exports.getAllValidation = function (callback) {
             callback(res);
         });
     });
-
-
 };
 
 /**
@@ -112,17 +110,15 @@ exports.getLastValidation = function (callback) {
     // Use connect method to connect to the server
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
-        getValidations(db, function(res) {
+        getAValidation(db, function(res) {
             db.close();
             callback(res);
         });
     });
 };
 
-
 var objectId = require('mongodb').ObjectID;
 var mongodb = require('mongodb');
-
 
 exports.setValid = function (id, callback) {
     console.log("on écrit en BD que " + id + " est valide");

@@ -6,11 +6,15 @@ extends layout
 block content
     script(src="javascripts/validationPage.js")
     h1= title
-        p #{message}
-        p De la team : #{team}
-        p Pour l'enigme : #{enigma}
-        p Réponse proposée : #{answer}
-        //p Réponse proposée : #{result}
-        div(id="idAnswer" myId='#{id}')
-        input(type='button', value='Valider', onclick='isValid();')
-        input(type='button', value='Refuser', onclick='isNotValid()')
+        div(id="myEnigma", style="display:block")
+            p #{message}
+            p De la team : #{team}
+            p Pour l'enigme : #{enigma}
+            p Réponse proposée : #{answer}
+            //p Réponse proposée : #{result}
+            div(id="idAnswer" myId='#{id}')
+            input(type='button', value='Valider', onclick='isValid()')
+            input(type='button', value='Refuser', onclick='isNotValid()')
+        div(id="answerSent", style="display:none")
+            p a
+            input(type='button', value='Une autre !', onClick="window.location.reload()")

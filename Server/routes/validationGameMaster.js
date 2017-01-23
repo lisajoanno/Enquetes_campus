@@ -10,12 +10,16 @@ var validationDB = require('./validationDB');
 /**
  * ATTENTION Content-type : application/json
  *
- * Lit la première attente de validation de la DB et l'affiche
+ * Lit la première attente de validation de la DB et l*'affiche
  */
 
 router.get('/', function(req, res, next) {
     validationDB.getLastValidation(function (result) {
-        res.render('gameMaster', { title: 'Nouvelle réponse proposée', result : result.result, id : result._id , team : result.teamID, enigma: result.enigmaID, answer: result.answer});
+        if (result == null) {
+            res.render('gameMaster', { title: 'Pas de nouvelle réponse proposée'});
+        } else {
+            res.render('gameMaster', { title: 'Nouvelle réponse proposée', result : result.result, id : result._id , team : result.teamID, enigma: result.enigmaID, answer: result.answer});
+        }
     });
 });
 
@@ -53,7 +57,7 @@ module.exports = router;
  */
 router.post('/isValid', function (req,res) {
     validationDB.setValid(req.body.idAnswer, function () {
-        console.log();
+        //TODO
     })
 });
 
@@ -62,6 +66,6 @@ router.post('/isValid', function (req,res) {
  */
 router.post('/isNotValid', function (req,res) {
     validationDB.setNotValid(req.body.idAnswer, function () {
-        
+        //TODO
     })
 });
