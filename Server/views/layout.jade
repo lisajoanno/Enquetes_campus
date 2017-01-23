@@ -1,9 +1,14 @@
 doctype html
 html
   head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    //script(type='text/javascript' src='../routes/validationPage')
+    link(rel='stylesheet', href='/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/stylish-portfolio.css')
+    script(src='http://code.jquery.com/jquery-1.11.3.min.js')
+    script(type='text/javascript', src='/js/bootstrap.min.js')
+    script(type='text/javascript', src='/socket.io/socket.io.js')
 
-  body
-    block content
+    title= title
+
+    body
+      block content

@@ -1,6 +1,7 @@
 extends layout
 
 block content
+
     script(src="/socket.io/socket.io.js")
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js")
 
@@ -26,9 +27,12 @@ block content
             var message = $('#data').val(); $('#data').val('');
             socket.emit('sendchat', message);});$('#data').keypress(function(e) {
         if(e.which == 13) {$(this).blur();$('#datasend').focus().click();}});});
-    h1= title
-    div(style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;")
-    div(id="liste-personnes")
-    div(id="conversation")
-    input(id="data" style="width:200px;")
-    input(type="button" id="datasend" value="send")
+    header(id="top" class="header")
+        h1(class="text-center" style="margin-top: 0px;") TzenTzen
+        div( style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;")
+        div(id="liste-personnes")
+        div(id="conversation")
+    div(class="container")
+       div(class="row")
+            input(id="data" class="col-sm-10 col-xs-8" style="width:83%;position: absolute; left: 0; bottom: 0;")
+            input(type="button" class="col-sm-2" id="datasend" value="send" style="position: absolute; right: 0; bottom: 0;")
