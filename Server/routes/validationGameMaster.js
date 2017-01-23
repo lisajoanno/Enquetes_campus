@@ -19,6 +19,14 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.get('/all', function (req,res, next) {
+    //console.log("salut");
+    validationDB.getAllValidation(function (item) {
+        //console.log(item);
+        res.send(item);
+    });
+});
+
 /**
  *
  * Nouvelle attente de formulation envoyée en DB
@@ -40,12 +48,18 @@ router.post('/', function(req, res) {
 module.exports = router;
 
 
+/**
+ * Set que la réponse proposée (body : _id) est valide en DB
+ */
 router.post('/isValid', function (req,res) {
-    validationDB.setValid(req.body.idAnswer, function (data) {
-        console.log(data);
+    validationDB.setValid(req.body.idAnswer, function () {
+        console.log();
     })
 });
 
+/**
+ * Set que la réponse proposée (body : _id) n'est pas valide en DB
+ */
 router.post('/isNotValid', function (req,res) {
     validationDB.setNotValid(req.body.idAnswer, function () {
         

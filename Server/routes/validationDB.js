@@ -32,20 +32,22 @@ var insertDocuments = function(db, callback) {
             "enigmaID":1,
             "teamID" : 4,
             "answer" : "le temps",
-            "result" : "a"
-        }/*,{
-            "enigmaID":1,
-            "teamID" : 4,
-            "answer" : "le temps"
+            "result" : ""
         },{
-            "enigmaID":1,
-            "teamID" : 4,
-            "answer" : "le temps"
-        }*/
+            "enigmaID":3,
+            "teamID" : 2,
+            "answer" : "le temps 2",
+            "result" : ""
+        },{
+            "enigmaID":2,
+            "teamID" : 7,
+            "answer" : "le temps 3",
+            "result" : ""
+        }
     ], function(err, result) {
         assert.equal(err, null);
-        assert.equal(1, result.result.n);
-        assert.equal(1, result.ops.length);
+        assert.equal(3, result.result.n);
+        assert.equal(3, result.ops.length);
         console.log("Inserted 1 validations into the collection");
         callback(result);
     });
@@ -83,6 +85,24 @@ var getValidations = function(db, callback) {
     });
 };
 
+exports.getAllValidation = function (callback) {
+    //callback("salut");
+    // Get the documents collection
+    MongoClient.connect(url, function(err, db) {
+        // Get the documents collection
+        var collection = db.collection('documents');
+        // Find some documents
+        collection.find({}).toArray(function(err, docs) {
+            assert.equal(err, null);
+            res = JSON.stringify(docs, null, 2);
+            //console.log("T : "+res);
+            callback(res);
+        });
+    });
+
+
+};
+
 /**
  * Demande de la denière validation de la DB des validations de réponses en attente.
  * @param callback
@@ -99,7 +119,9 @@ exports.getLastValidation = function (callback) {
     });
 };
 
-var ObjectId = require('mongodb').ObjectID;
+
+var objectId = require('mongodb').ObjectID;
+var mongodb = require('mongodb');
 
 
 exports.setValid = function (id, callback) {
@@ -108,23 +130,24 @@ exports.setValid = function (id, callback) {
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection('documents');
-        collection.findOneAndUpdate(
-            { _id : id },
-            { $set: { "result" : "valid" }},
-            { returnNewDocument : true }
-
+        collection.updateOne(
+            {'_id': mongodb.ObjectID(id) },
+            { $set: { "result" : "ok" }}
         );
-
-        callback(data);
-/**
-        //new ObjectId(id).update({'result':'valid'});
-        //callback(doc);
-
-        // Insert some documents
-**/
+        callback();
     });
-
 };
+
 exports.setNotValid = function (id, callback) {
-    console.log("on écrit en BD que " + id + " est pas valide")
+    console.log("on écrit en BD que " + id + " n'est pas valide");
+
+    MongoClient.connect(url, function(err, db) {
+        // Get the documents collection
+        var collection = db.collection('documents');
+        collection.updateOne(
+            {'_id': mongodb.ObjectID(id) },
+            { $set: { "result" : "nok" }}
+        );
+        callback();
+    });
 };
