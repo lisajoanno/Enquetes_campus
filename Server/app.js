@@ -64,7 +64,7 @@ app.use(function(req, res, next) {
 
 var PORT = 8888;
 
-var listener = app.listen(PORT, function(){
+var listener = server.listen(PORT, function(){
   console.log('Listening on port ' + listener.address().port); //Listening on port 8888
 });
 
