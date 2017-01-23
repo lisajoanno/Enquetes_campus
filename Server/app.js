@@ -77,7 +77,12 @@ var rooms = ['room'];
 
 var validationDB = require('./routes/validationDB');
 
+// on stocke tous les clients pour récup leur socket après, via leur id session
+var clients = {};
+
 io.sockets.on('connection', function (socket) {
+    clients[socket.id] = socket;
+    validationDB.setSockets(clients);
 
     // when the client emits 'adduser', this listens and executes
     socket.on('adduser', function(username){
@@ -116,21 +121,14 @@ io.sockets.on('connection', function (socket) {
         socket.leave(socket.room);
     });
 
+    //TODO dire à Chloé d'enlever "result" de son JSON (logique)
     socket.on('addValidation', function(data) {
-        console.log(data);
-        //console.log(data.hey);
+        data.socketId = socket.id;
+        data.result = "";
 
         validationDB.addAValidation(data, function () {
-            console.log("bien envoyé en BD : " + data + "");
-
-
-
-            //res.send(true); // TODO à faire !!
-            // attendre
-            io.sockets.emit('sendlisa', 'heyheyhey');
+            io.sockets.emit('sentValidation', 'Votre réponse est en attente');
         });
-
-
     });
 });
 

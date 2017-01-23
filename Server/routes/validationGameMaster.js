@@ -57,7 +57,7 @@ module.exports = router;
  */
 router.post('/isValid', function (req,res) {
     validationDB.setValid(req.body.idAnswer, function () {
-        //TODO
+
     })
 });
 
@@ -66,6 +66,6 @@ router.post('/isValid', function (req,res) {
  */
 router.post('/isNotValid', function (req,res) {
     validationDB.setNotValid(req.body.idAnswer, function () {
-        //TODO
+
     })
 });

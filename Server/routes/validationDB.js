@@ -4,26 +4,34 @@
 
 var MongoClient = require('mongodb').MongoClient
     , assert = require('assert');
+var objectId = require('mongodb').ObjectID;
+var mongodb = require('mongodb');
 
 
 // Connection URL
 var url = 'mongodb://localhost:27017/validation';
 
 
-// Use connect method to connect to the server
+/**
+ * Initialisation de la BDD
+ */
 MongoClient.connect(url, function(err, db) {
-    // TODO commenter pour vider la bdd de temps en temps
+    // Commenter pour vider la bdd de temps en temps
     db.collection('documents').drop();
     assert.equal(null, err);
     console.log("Connected successfully to validation");
-
-    insertDocuments(db, function() {
+    insertStartingDocuments(db, function() {
         db.close();
     });
 });
 
-// Initialization
-var insertDocuments = function(db, callback) {
+/**
+ * Insère quelques documents dans la BDD pour l'initialiser
+ *
+ * @param db
+ * @param callback
+ */
+var insertStartingDocuments = function(db, callback) {
     // Get the documents collection
     var collection = db.collection('documents');
     // Insert some documents
@@ -32,36 +40,37 @@ var insertDocuments = function(db, callback) {
             "enigmaID":1,
             "teamID" : 4,
             "answer" : "le temps",
-            "result" : ""
-        },{
+            "result" : "",
+            "socketId" : 111
+        }/*,{
             "enigmaID":3,
             "teamID" : 2,
             "answer" : "le temps 2",
-            "result" : ""
+            "result" : "",
+            "socketId" : 222
         },{
             "enigmaID":2,
             "teamID" : 7,
             "answer" : "le temps 3",
-            "result" : ""
-        }
+            "result" : "",
+            "socketId" : 333
+        }*/
     ], function(err, result) {
         assert.equal(err, null);
-        assert.equal(3, result.result.n);
-        assert.equal(3, result.ops.length);
-        console.log("Inserted 1 validations into the collection");
+        assert.equal(1, result.result.n);
+        assert.equal(1, result.ops.length);
+        console.log("La BDD a été initialisée avec " + result.result.n + " validation(s).");
         callback(result);
     });
 };
 
 /**
- * Ajouter le json en param dans la DB (à la fin, FIFO).
+ * Ajoute le json en param dans la DB des validations
  * @param json
  * @param callback
  */
 exports.addAValidation = function (json, callback) {
-
     MongoClient.connect(url, function(err, db) {
-
         // Get the documents collection
         var collection = db.collection('documents');
         // Insert some documents
@@ -69,12 +78,14 @@ exports.addAValidation = function (json, callback) {
             json
         ]);
         callback();
-
     });
-
-
 };
 
+/**
+ * Renvoie la première validation pour le game master
+ * @param db
+ * @param callback
+ */
 var getAValidation = function(db, callback) {
     // Get the documents collection
     var collection = db.collection('documents');
@@ -85,6 +96,10 @@ var getAValidation = function(db, callback) {
     });
 };
 
+/**
+ * Renvoie l'intégralité de la DBB des validations
+ * @param callback
+ */
 exports.getAllValidation = function (callback) {
     //callback("salut");
     // Get the documents collection
@@ -117,12 +132,9 @@ exports.getLastValidation = function (callback) {
     });
 };
 
-var objectId = require('mongodb').ObjectID;
-var mongodb = require('mongodb');
+
 
 exports.setValid = function (id, callback) {
-    console.log("on écrit en BD que " + id + " est valide");
-
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection('documents');
@@ -132,11 +144,10 @@ exports.setValid = function (id, callback) {
         );
         callback();
     });
+    sendToClient(id, "ok", callback);
 };
 
 exports.setNotValid = function (id, callback) {
-    console.log("on écrit en BD que " + id + " n'est pas valide");
-
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection('documents');
@@ -146,4 +157,39 @@ exports.setNotValid = function (id, callback) {
         );
         callback();
     });
+    sendToClient(id, "nok", callback);
 };
+
+
+// ----------------------                       socket related
+
+// La liste des sockets des clients (appelé dans app.js à chaque fois qu'une nouvelle socket est créée)
+var clients = {};
+exports.setSockets = function(listSocket) {
+    clients = listSocket;
+};
+
+/**
+ * Envoie le message toSend au client, en cherchant l'id de sa socket en BDD à partir de l'ID de la réponse donnée.
+ * @param id
+ * @param toSend
+ * @param callback
+ */
+var sendToClient = function(id, toSend, callback) {
+    var socketId;
+    // ICI faire socket avec l'ID de la socket en BD pour l'_id
+    MongoClient.connect(url, function(err, db) {
+        // Get the documents collection
+        var collection = db.collection('documents');
+        collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
+            assert.equal(err, null);
+            if (clients[docs[0].socketId] != null) {
+                clients[docs[0].socketId].emit('isValidated', toSend);
+            }
+            callback();
+        });
+
+    });
+};
+
+
