@@ -9,6 +9,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var accessEnigmas = require('./routes/accessEnigmas');
 var gameMaster = require('./routes/validationGameMaster');
+//var io = require('./routes/validationSocket').listen(app)
 
 var app = express()
     ,http = require('http')
@@ -74,6 +75,8 @@ var usernames = {};
 // rooms which are currently available in chat
 var rooms = ['room'];
 
+var validationDB = require('./routes/validationDB');
+
 io.sockets.on('connection', function (socket) {
 
     // when the client emits 'adduser', this listens and executes
@@ -111,6 +114,23 @@ io.sockets.on('connection', function (socket) {
         socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' s\'est déconnecté');
         socket.broadcast.to('room').emit('removeuser', socket.username, 'username');
         socket.leave(socket.room);
+    });
+
+    socket.on('addValidation', function(data) {
+        console.log(data);
+        //console.log(data.hey);
+
+        validationDB.addAValidation(data, function () {
+            console.log("bien envoyé en BD : " + data + "");
+
+
+
+            //res.send(true); // TODO à faire !!
+            // attendre
+            io.sockets.emit('sendlisa', 'heyheyhey');
+        });
+
+
     });
 });
 
