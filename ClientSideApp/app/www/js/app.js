@@ -1,12 +1,33 @@
-// Ionic Starter App
+  // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 'starter.controllers'])
 
-.run(function($ionicPlatform, $rootScope) {
+// Identify App
+  .config(['$ionicAppProvider', function($ionicAppProvider) {
+    // Identify app
+    $ionicAppProvider.identify({
+      app_id: 'a1625e2d',
+      api_key: 'dbecb11453f29e0344d34ec999c1b419aedff69a9bd7cece'
+    });
+  }])
+
+  .factory('socket',function(socketFactory){
+    //Create socket and connect to http://chat.socket.io
+    var myIoSocket = io.connect('http://10.212.118.204:8888/');
+
+    mySocket = socketFactory({
+      ioSocket: myIoSocket
+    });
+
+    return mySocket;
+  })
+
+
+    .run(function($ionicPlatform, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,6 +40,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    var push = new Ionic.Push({
+      "debug": true
+    });
+
+    push.register(function(token) {
+      console.log("My Device token:",token.token);
+      push.saveToken(token);  // persist the token in the Ionic Platform
+    });
 
   });
 })
@@ -53,6 +83,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
 
 .config(function($stateProvider, $urlRouterProvider) {
+
   $stateProvider
 
     .state('app', {
@@ -99,6 +130,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         'menuContent': {
           templateUrl: 'templates/enigme.html',
           controller: 'EnigmeCtrl'
+        }
+      }
+    })
+
+    .state('app.chat', {
+      url: '/chat',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/chat.html',
+          controller: 'ChatCtrl'
         }
       }
     })

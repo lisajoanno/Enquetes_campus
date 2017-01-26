@@ -3,14 +3,17 @@ angular.module('starter.controllers', [])
 .controller('AppCtrl', function($scope, $http) {
 
   // Form data for the login modal
-  $scope.loginData = {'groupe_name' : '', 'mdp' : ''};
+  $scope.loginData = {'groupe_name' : 'chloe', 'groupe_id' : 'azerty'};
   $scope.connected = false;
+
+  $scope.resolvedEnigmas = {};
 
   // Open the login modal
   $scope.login = function() {
     console.log(JSON.stringify($scope.loginData));
     $scope.connected= true;
   };
+
 
 })
 
@@ -26,7 +29,7 @@ angular.module('starter.controllers', [])
     zoom: 15
   };
   var map = new google.maps.Map(document.getElementById("map"), optionsGmaps);
-  console.log(JSON.stringify($scope.enigmes));
+  //console.log(JSON.stringify($scope.enigmes));
 
   //Affichage de la position
   $scope.position = {x : 0, y : 0};
@@ -64,7 +67,7 @@ angular.module('starter.controllers', [])
   }).then(function successCallback(response) {
     var enigmes = response.data;
     for (var enigme in enigmes) {
-      console.log(enigmes[enigme]);
+     // console.log(enigmes[enigme]);
       var roiCircle = new google.maps.Circle({
         strokeColor: '#FF0000',
         strokeOpacity: 0.8,
@@ -84,6 +87,8 @@ angular.module('starter.controllers', [])
 
 
 .controller('EnigmesCtrl', function($scope, $stateParams, $http, $stateParams) {
+
+
   $scope.position = {x : 0, y : 0};
   $scope.setPosition = function (givenPosition){
     $scope.position.x = givenPosition.coords.latitude;
@@ -96,17 +101,21 @@ angular.module('starter.controllers', [])
     }).then(function successCallback(response) {
       $scope.enigmes = response.data;
       for (var enigme in $scope.enigmes) {
-        console.log(JSON.stringify($scope.enigmes[enigme].coo));
-        console.log(JSON.stringify($scope.position));
+        //console.log(JSON.stringify($scope.enigmes[enigme].coo));
+        //console.log(JSON.stringify($scope.position));
         //coo???
 
         var a = $scope.enigmes[enigme].coo;
         var b = $scope.position;
         var distance =  $scope.getDistanceFromLatLonInKm(a.lat,a.lng,b.x,b.y);
-        console.log("La distance entre l'énigme et l'user est de " + distance + " km");
-        if (distance<=0.150)
+        //console.log("La distance entre l'énigme et l'user est de " + distance + " km");
+        if (distance<=0.150) {
           $scope.enigmes[enigme].isAvailable = true;
-        else
+          ///XXXXXXXXXXXXXXXXXXXXXXXXXXXEnvoyer notif ici
+          console.log("envoie de notif");
+
+
+        }else
           $scope.enigmes[enigme].isAvailable = false;
       }
     }, function errorCallback(response) {
@@ -144,7 +153,7 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('EnigmeCtrl', function($scope, $stateParams, $http, $stateParams) {
+.controller('EnigmeCtrl', function($scope, $stateParams, $http, $stateParams, socket) {
   $scope.selectedEnigme;
   $scope.answToSend = {
     "enigmaID": $stateParams.enigmeId,
@@ -172,19 +181,50 @@ angular.module('starter.controllers', [])
   });
 
   $scope.sendAnswer = function (){
-    $http({
-      method: 'POST',
-      url: 'http://10.212.118.204:8888/master',
-      data : $scope.answToSend,
-      headers: { 'Content-type': 'application/json' }
-    }).then(function successCallback(response) {
-      $scope.isCorrect = response.data;
-      if ($scope.isCorrect)
-        document.getElementById("answer-input").className += " true-cadre";
-      else
-        document.getElementById("answer-input").className += " false-cadre";
-    }, function errorCallback(response) {
-      console.log("Couldn't check answer");
-    });
+    socket.emit("addvalidation",  $scope.answToSend);
   };
-});
+
+  //Envoyé lorsque la réponse a bien été reçue par le serveur
+  socket.on('sentvalidation',function(){
+    console.log("in sent validation");
+    $scope.showAlert = function() {
+      var alertPopup = $ionicPopup.alert({
+        title: 'Réponse envoyée',
+        template: 'Un administrateur va vérifier votre réponse.'
+      });
+    }
+  })
+
+  //Envoyé lorsqu'un administrateur a vérifié la réponse
+  socket.on('isvalidated',function(isCorrect){
+    if (isCorrect){
+      document.getElementById("answer-input").className += " true-cadre";
+    }
+    else
+      document.getElementById("answer-input").className += " false-cadre";
+  })
+})
+
+
+  .controller('ChatCtrl', function($scope, socket) {
+    //console.log("in chat ctrl");
+    $scope.messages = [];
+    $scope.messageToSend = "";
+    socket.on('connect',function(){
+      //Add user called nickname
+      socket.emit('adduser',$scope.loginData.groupe_name);
+      console.log("Connected to socket server");
+    })
+    socket.on('updatechat',function(username, data){
+      if (username != $scope.loginData.groupe_name)
+        $scope.messages[$scope.messages.length] = {"content":data, "sender":username};
+      else
+        $scope.messages[$scope.messages.length] = {"content":data, "sender":"Vous"};
+    })
+    $scope.sendMessage = function() {
+      socket.emit("sendchat", $scope.messageToSend);
+      $scope.messageToSend = "";
+    }
+  })
+
+;
