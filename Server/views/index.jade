@@ -8,27 +8,40 @@ block content
     script.
         function bottom() {
             document.getElementById( 'bottom' ).scrollIntoView();
-            window.setTimeout( function () { top(); }, 2000 );
             $('#data').focus();};
 
     script.
         var socket = io.connect('http://10.212.123.252:8888');
         socket.on('connect', function(){
-            socket.emit('adduser', prompt("What's your name?"));});
-        socket.on('updateusernames', function (usernames) {
+            socket.emit('adduser', prompt("Entrez votre pseudo :"));});
+        socket.on('updateusernames', function (usernames, username) {
             for (u in usernames) {
-                $('#liste-personnes').append('<b id="' + u + '">' + u + '<br /></b>');
+                if (u === username) {
+                    $('#liste-personnes').append('<b id=\"me\">' + u + '</b><br />');
+                }
+                    else
+                {
+                    $('#liste-personnes').append('<b id=\"' + u + '\">' + u + '<br /></b>');
+                }
             }
         });
         socket.on('updateusername', function(username) {
-            $('#liste-personnes').append('<b id=' + username + '>' + username + '<br /></b>');
+            $('#liste-personnes').append('<b id=\"' + username + '\">' + username + '<br /></b>');
         });
         socket.on('removeuser', function(username) {
             var elem = document.getElementById(username);
             elem.parentNode.removeChild(elem);
         });
         socket.on('updatechat', function (username, data) {
-            $('#conversation').append('<b>' + username + ':</b> ' + data + '<br>');
+            var name = document.getElementById("me");
+            console.log("name = " + name.innerHTML);
+            console.log("username = " + username);
+            if(name.innerHTML === username) {
+                $('.chat').append('<li class=\"self\"><div class=\"msg\"><p>' + data + '</p></div></li>');
+
+            } else {
+                $('.chat').append('<li class=\"other\"><div class=\"msg\"><div class=\"user\">' + username + '</div> <p>' + data + '</p></div></li>');
+            }
             bottom();
         });$(function(){ $('#datasend').click( function() {
             var message = $('#data').val(); $('#data').val('');
@@ -36,11 +49,14 @@ block content
         if(e.which == 13) {$(this).blur();$('#datasend').focus().click();}});});
     header(id="top" class="header")
         h1(class="text-center" style="margin-top: 0px;") TzenTzen
-        div(style="position: fixed; background-color: white; border: solid 0.5em; border-radius: 0.2em; padding: 1em;")
-            h2 Utilisateurs en ligne
-            div(id="liste-personnes")
-        div(style="display: block; text-align: center; overflow:scroll-y;padding:10px;")
-            div(id="conversation" style="padding:1em;")
+        div
+            div(class="col-md-3")
+                div(style="position: fixed; background-color: white;padding: 1em;")
+                    h2 Utilisateurs en ligne
+                    div(id="liste-personnes")
+            div(id="conversation" class="col-md-6")
+                ol(class="chat")
+            div(class="col-md-3")
         div(id="bottom")
     div(class="container")
        div(class="row")

@@ -93,12 +93,9 @@ io.sockets.on('connection', function (socket) {
         // add the client's username to the global list
         usernames[username] = username;
         // send client to the room
-        socket.join('room');
-        // echo to client they've connected
-        socket.emit('updatechat', 'SERVER', 'vous êtes maintenant en ligne');
+        socket.join('room');;
         // echo to room that a person has connected to the room
-        socket.broadcast.to('room').emit('updatechat', 'SERVER', username + ' s\'est connecté au chat');
-        socket.emit('updateusernames', usernames, 'username');
+        socket.emit('updateusernames', usernames, username, 'username');
         socket.broadcast.to('room').emit('updateusername', username, 'username');
     });
 
@@ -116,7 +113,6 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('updateusers', usernames);
         io.sockets.emit('removeuser', socket.username, 'username');
         // echo globally that this client has left
-        socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' s\'est déconnecté');
         socket.broadcast.to('room').emit('removeuser', socket.username, 'username');
         socket.leave(socket.room);
     });
