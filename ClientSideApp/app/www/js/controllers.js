@@ -2,24 +2,30 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $http) {
 
-  // Form data for the login modal
-  $scope.loginData = {'groupe_name' : 'chloe', 'groupe_id' : 'azerty'};
-  $scope.connected = false;
+  $scope.serverAddress = 'http://10.212.118.204:8888/';
 
-  $scope.resolvedEnigmas = {};
+  $scope.loginData = {'groupe_name' : 'Groupe Des Cerises', 'groupe_id' : ''};
+  $scope.currentEnigme = 0;
 
   // Open the login modal
   $scope.login = function() {
     console.log(JSON.stringify($scope.loginData));
-    $scope.connected= true;
+    $http({
+      method: 'POST',
+      url: $scope.serverAddress+'team',
+      headers: { 'Content-type': 'application/json' },
+      data: { teamName: $scope.loginData.groupe_name}
+    }).then(function successCallback(response) {
+      $scope.loginData.groupe_id = response.data;
+      console.log("IDENTIFIANT ::: "+ response.data);
+      console.log(JSON.stringify($scope.loginData));
+    }, function errorCallback(response) {
+      console.log("Couldn't get enigma.");
+    });
   };
-
-
 })
 
 .controller('CarteCtrl', function($scope, $http) {
- // $scope.position = {x : 0, y : 0};
-
   //Affichage de la carte (avec un position à Strasbourg par défaut)
   var centerpos = new google.maps.LatLng(48.579400,7.7519);
   var optionsGmaps = {
@@ -58,11 +64,10 @@ angular.module('starter.controllers', [])
     console.log("Geolocation is not supported by this browser.");
   }
 
-
   //Affichage de la position des énigmes
   $http({
     method: 'GET',
-    url: 'http://10.212.118.204:8888/access',
+    url: $scope.serverAddress+'access',
     headers: { 'Content-type': 'application/json' }
   }).then(function successCallback(response) {
     var enigmes = response.data;
@@ -85,10 +90,7 @@ angular.module('starter.controllers', [])
 })
 
 
-
 .controller('EnigmesCtrl', function($scope, $stateParams, $http, $stateParams) {
-
-
   $scope.position = {x : 0, y : 0};
   $scope.setPosition = function (givenPosition){
     $scope.position.x = givenPosition.coords.latitude;
@@ -96,7 +98,7 @@ angular.module('starter.controllers', [])
     //plusieurs énigmes ont la meme position -> meme groupe d'énigmes
     $http({
       method: 'GET',
-      url: 'http://10.212.118.204:8888/access',
+      url: $scope.serverAddress+'access',
       headers: { 'Content-type': 'application/json' }
     }).then(function successCallback(response) {
       $scope.enigmes = response.data;
@@ -153,11 +155,11 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('EnigmeCtrl', function($scope, $stateParams, $http, $stateParams, socket) {
+.controller('EnigmeCtrl', function($scope, $stateParams, $http, $ionicPopup, socket) {
   $scope.selectedEnigme;
   $scope.answToSend = {
     "enigmaID": $stateParams.enigmeId,
-    "teamID" : 4,
+    "teamID" : $scope.loginData.groupe_id,
     "answer" : ""
   };
   $scope.isCorrect;
@@ -165,7 +167,7 @@ angular.module('starter.controllers', [])
   //plusieurs énigmes ont la meme position -> meme groupe d'énigmes
   $http({
     method: 'GET',
-    url: 'http://10.212.118.204:8888/access',
+    url: $scope.serverAddress+'access',
     headers: { 'Content-type': 'application/json' }
   }).then(function successCallback(response) {
     var enigmes = response.data;
@@ -181,33 +183,35 @@ angular.module('starter.controllers', [])
   });
 
   $scope.sendAnswer = function (){
+    console.log(JSON.stringify($scope.loginData));
+    console.log(JSON.stringify($scope.answToSend));
     socket.emit("addvalidation",  $scope.answToSend);
   };
 
   //Envoyé lorsque la réponse a bien été reçue par le serveur
-  socket.on('sentvalidation',function(){
+  socket.on('sentvalidation',function(data){
     console.log("in sent validation");
-    $scope.showAlert = function() {
-      var alertPopup = $ionicPopup.alert({
-        title: 'Réponse envoyée',
-        template: 'Un administrateur va vérifier votre réponse.'
-      });
-    }
-  })
+    var alertFailPopup = $ionicPopup.alert({
+      title: 'Réponse envoyée',
+      template: 'Un administrateur va vérifier votre réponse.',
+      okText: 'Continuer',
+      cssClass: 'failPopup'
+    });
+  });
 
   //Envoyé lorsqu'un administrateur a vérifié la réponse
   socket.on('isvalidated',function(isCorrect){
     if (isCorrect){
       document.getElementById("answer-input").className += " true-cadre";
+      $scope.currentEnigme++;
     }
     else
       document.getElementById("answer-input").className += " false-cadre";
-  })
+  });
 })
 
 
   .controller('ChatCtrl', function($scope, socket) {
-    //console.log("in chat ctrl");
     $scope.messages = [];
     $scope.messageToSend = "";
     socket.on('connect',function(){

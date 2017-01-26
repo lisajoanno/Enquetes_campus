@@ -4,20 +4,8 @@
       <label class="item item-input">
         <input type="text" placeholder="Username" ng-model="loginData.groupe_name">
       </label>
-      <label class="item item-input">
-        <input type="password" placeholder="Password" ng-model="loginData.mdp">
-      </label>
       <div class="row">
         <button class="button button-positive col col-33 col-offset-33" ng-click="login()" ng-show="!connected">Login</button>
-
-        <div class="card col col-33 col-offset-33" ng-show="connected">
-          <div class="item item-text-wrap ">
-            <div class = "center-text">
-              Vous êtes connectés!
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
 
