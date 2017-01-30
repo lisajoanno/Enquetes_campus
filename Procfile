@@ -1,2 +1,2 @@
-web: ./Server/bin/www
+web: web: sh -c 'cd ./Server/ && npm install && npm start'
     
