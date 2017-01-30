@@ -4,6 +4,7 @@
 
 var MongoClient = require('mongodb').MongoClient
     , assert = require('assert');
+var mongodb = require('mongodb');
 
 // Connection URL
 var url = 'mongodb://localhost:27017/team';
@@ -26,8 +27,8 @@ var insertDocuments = function(db, callback) {
     // Insert some documents
     collection.insertMany([
         {
-            "teamName": "team1",
-            "resolved": "1,2,3",
+            "teamName": "superlisa",
+            "resolved": "1",
             "score": 10
         },
         {
@@ -49,3 +50,59 @@ var insertDocuments = function(db, callback) {
     });
 };
 
+
+exports.addATeam = function (teamName, callback) {
+    MongoClient.connect(url, function(err, db) {
+        // Get the documents collection
+        var collection = db.collection('documents');
+        // Insert some documents
+        collection.insertMany([
+            {
+                "teamName": teamName,
+                "resolved": "",
+                "score": 0
+            }
+        ]);
+        collection.findOne({"teamName":teamName}, function(err, item) {
+            assert.equal(err, null);
+            console.log("l'id de la team " + teamName + " est : " + item._id);
+            callback(item._id);
+        });
+    });
+};
+
+/**
+ * Renvoie l'intégralité de la DBB des teams
+ * @param callback
+ */
+exports.getAllTeams = function (callback) {
+    MongoClient.connect(url, function(err, db) {
+        // Get the documents collection
+        var collection = db.collection('documents');
+        // Find some documents
+        collection.find({}).toArray(function(err, docs) {
+            assert.equal(err, null);
+            res = JSON.stringify(docs, null, 2);
+            //console.log("T : "+res);
+            callback(res);
+        });
+    });
+};
+
+
+
+exports.teamResolvedAnEnigma = function (idTeam, idEnigma, callback) {
+    console.log("la team " + idTeam + "  a validé l'enigme " + idEnigma);
+    MongoClient.connect(url, function(err, db) {
+        var collection = db.collection('documents');
+        collection.findOne({'teamName': idTeam}, function(err, item) {
+            var nowResolved = item.resolved + "," + idEnigma;
+            assert.equal(err, null);
+            collection.updateOne(
+                {'teamName': idTeam },
+                { $set: { "resolved" : nowResolved }}
+            );
+        });
+
+    });
+};

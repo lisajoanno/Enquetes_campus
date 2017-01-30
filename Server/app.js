@@ -9,7 +9,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var accessEnigmas = require('./routes/accessEnigmas');
 var gameMaster = require('./routes/validationGameMaster');
-//var io = require('./routes/validationSocket').listen(app)
+var team = require('./routes/team');
 
 var app = express()
     ,http = require('http')
@@ -54,6 +54,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/access', accessEnigmas);
 app.use('/master', gameMaster);
+app.use('/team', team);
 
 
 // catch 404 and forward to error handler
@@ -86,6 +87,7 @@ io.sockets.on('connection', function (socket) {
 
     // when the client emits 'adduser', this listens and executes
     socket.on('adduser', function(username){
+        console.log("on tente de se connecter sous le username : " + username);
         // store the username in the socket session for this client
         socket.username = username;
         // store the room name in the socket session for this client
@@ -101,12 +103,14 @@ io.sockets.on('connection', function (socket) {
 
     // when the client emits 'sendchat', this listens and executes
     socket.on('sendchat', function (data) {
+        console.log("j'ai reçu : " + data);
         // we tell the client to execute 'updatechat' with 2 parameters
         io.sockets.in(socket.room).emit('updatechat', socket.username, data);
     });
 
     // when the user disconnects.. perform this
     socket.on('disconnect', function(){
+        console.log("on s'est déco !");
         // remove the username from global usernames list
         delete usernames[socket.username];
         // update list of users in chat, client-side
@@ -117,13 +121,12 @@ io.sockets.on('connection', function (socket) {
         socket.leave(socket.room);
     });
 
-    //TODO dire à Chloé d'enlever "result" de son JSON (logique)
-    socket.on('addValidation', function(data) {
+    socket.on('addvalidation', function(data) {
         data.socketId = socket.id;
         data.result = "";
 
         validationDB.addAValidation(data, function () {
-            io.sockets.emit('sentValidation', 'Votre réponse est en attente');
+            io.sockets.emit('sentvalidation', 'rien');
         });
     });
 });

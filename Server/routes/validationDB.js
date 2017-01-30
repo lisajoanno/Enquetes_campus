@@ -7,6 +7,7 @@ var MongoClient = require('mongodb').MongoClient
 var objectId = require('mongodb').ObjectID;
 var mongodb = require('mongodb');
 
+var teamDB = require('./teamDB');
 
 // Connection URL
 var url = 'mongodb://localhost:27017/validation';
@@ -38,7 +39,7 @@ var insertStartingDocuments = function(db, callback) {
     collection.insertMany([
         {
             "enigmaID":1,
-            "teamID" : 4,
+            "teamID" : "lasuperteam",
             "answer" : "le temps",
             "result" : "",
             "socketId" : 111
@@ -70,6 +71,7 @@ var insertStartingDocuments = function(db, callback) {
  * @param callback
  */
 exports.addAValidation = function (json, callback) {
+    console.log("j'ajoute la validation à la team " + json.teamID);
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection('documents');
@@ -142,9 +144,16 @@ exports.setValid = function (id, callback) {
             {'_id': mongodb.ObjectID(id) },
             { $set: { "result" : "ok" }}
         );
-        callback();
+        collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
+            assert.equal(err, null);
+            teamDB.teamResolvedAnEnigma(docs[0].teamID, docs[0].enigmaID, function () {
+                sendToClient(id, "ok", callback);
+                callback();
+            });
+            //callback();
+        });
+
     });
-    sendToClient(id, "ok", callback);
 };
 
 exports.setNotValid = function (id, callback) {
@@ -184,11 +193,10 @@ var sendToClient = function(id, toSend, callback) {
         collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
             assert.equal(err, null);
             if (clients[docs[0].socketId] != null) {
-                clients[docs[0].socketId].emit('isValidated', toSend);
+                clients[docs[0].socketId].emit('isvalidated', toSend);
             }
             callback();
         });
-
     });
 };
 
