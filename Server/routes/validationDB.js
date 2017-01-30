@@ -38,8 +38,8 @@ var insertStartingDocuments = function(db, callback) {
     // Insert some documents
     collection.insertMany([
         {
-            "enigmaID":1,
-            "teamID" : "lasuperteam",
+            "enigmaID": 1,
+            "teamID" : "team1",
             "answer" : "le temps",
             "result" : "",
             "socketId" : 111
@@ -71,7 +71,7 @@ var insertStartingDocuments = function(db, callback) {
  * @param callback
  */
 exports.addAValidation = function (json, callback) {
-    console.log("j'ajoute la validation à la team " + json.teamID);
+    console.log("Perso j'ai reçu : " + json);
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection('documents');

@@ -14,6 +14,7 @@ var validationDB = require('./validationDB');
  */
 
 router.get('/', function(req, res, next) {
+    console.log("Déjà je suis là");
     validationDB.getLastValidation(function (result) {
         if (result == null) {
             res.render('gameMaster', { title: 'Pas de nouvelle réponse proposée'});

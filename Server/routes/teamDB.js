@@ -27,7 +27,7 @@ var insertDocuments = function(db, callback) {
     // Insert some documents
     collection.insertMany([
         {
-            "teamName": "superlisa",
+            "teamName": "team1",
             "resolved": "1",
             "score": 10
         },
