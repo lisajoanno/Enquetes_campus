@@ -2,6 +2,7 @@ html, body {
     background: #252C33;
     font-family: 'Lato', sans-serif;
     margin: 0px auto;
+    color: white;
 }
 ::selection{
     background: rgba(82,179,217,0.3);
@@ -479,3 +480,8 @@ textarea:focus {
         right: 10px;
     }
 }
+
+button, .lst-pers, #data, input {
+    color: black;
+}
+
