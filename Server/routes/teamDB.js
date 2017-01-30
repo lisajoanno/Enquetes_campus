@@ -88,8 +88,7 @@ exports.getAllTeams = function (callback) {
     });
 };
 
-exports.teamResolvedAnEnigma = function (idTeam, idEnigma, callback) {
-    console.log("la team " + idTeam + "  a validé l'enigme " + idEnigma);
+exports.teamResolvedAnEnigma = function (idTeam, idEnigma, score, callback) {
     MongoClient.connect(url, function(err, db) {
         var collection = db.collection('documents');
         collection.find({'_id': mongodb.ObjectID(idTeam) })
@@ -98,7 +97,9 @@ exports.teamResolvedAnEnigma = function (idTeam, idEnigma, callback) {
                 assert.equal(err, null);
                 collection.updateOne(
                     {'_id': mongodb.ObjectID(idTeam) },
-                    { $set: { "resolved" : nowResolved }}
+                    { $set: { "resolved" : nowResolved },
+                        $inc: { "score" : score} // incrémentation du score
+                    }
                 );
             });
         /*, function(err, item) {

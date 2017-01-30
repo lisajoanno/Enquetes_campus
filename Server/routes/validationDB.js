@@ -8,6 +8,7 @@ var objectId = require('mongodb').ObjectID;
 var mongodb = require('mongodb');
 
 var teamDB = require('./teamDB');
+var enigmaDB = require('./enigmasDB');
 
 // Connection URL
 var url = 'mongodb://localhost:27017/validation';
@@ -90,11 +91,13 @@ exports.addAValidation = function (json, callback) {
  */
 var getAValidation = function(db, callback) {
     // Get the documents collection
-    var collection = db.collection('documents');
-    // Find some documents
-    collection.findOne({"result":""}, function(err, item) {
-        assert.equal(err, null);
-        callback(item);
+    MongoClient.connect(url, function(err, db) {
+        var collection = db.collection('documents');
+        // Find some documents
+        collection.findOne({"result":""}, function(err, item) {
+            assert.equal(err, null);
+            callback(item);
+        });
     });
 };
 
@@ -145,10 +148,19 @@ exports.setValid = function (id, callback) {
         );
         collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
             assert.equal(err, null);
-            teamDB.teamResolvedAnEnigma(docs[0].teamID, docs[0].enigmaID, function () {
-                sendToClient(id, "ok", callback);
-                callback();
+
+            /*
+            on va chercher le score que rapport l'énigme
+             */
+            enigmaDB.getScoreForAEnigma(docs[0].enigmaID, function (scoreFound) {
+                teamDB.teamResolvedAnEnigma(docs[0].teamID, docs[0].enigmaID, scoreFound , function () {
+                    sendToClient(id, "ok", callback);
+                    callback();
+                });
             });
+
+
+
             //callback();
         });
     });

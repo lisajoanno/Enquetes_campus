@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
     //res.setHeader('Content-Type', 'application/json');
-    var result = enigmasDB(function (result)  {
+    var result = enigmasDB.findAllEnigmas(function (result)  {
 
         res.send(result);
 

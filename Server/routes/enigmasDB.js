@@ -103,11 +103,12 @@ var findDocuments = function(db, callback) {
  *
  * @param callback what to do with the result.
  */
-var findAllEnigmas = function(callback) {
+exports.findAllEnigmas = function(callback) {
 
     // Use connect method to connect to the server
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
+        var collection = db.collection('documents');
         console.log("Connected successfully to enigmas");
         findDocuments(db, function(res) {
             db.close();
@@ -116,5 +117,16 @@ var findAllEnigmas = function(callback) {
     });
 };
 
-module.exports = findAllEnigmas;
+exports.getScoreForAEnigma = function(idEnigma, callback) {
+    MongoClient.connect(url, function(err, db) {
+        var collection = db.collection('documents');
+        var valueOfEnigmaID = parseInt(idEnigma);
+        collection.find({"id" : valueOfEnigmaID})
+            .toArray(function(err, docs) {
+                callback(docs[0].point);
+            });
+    });
+};
+
+//module.exports = findAllEnigmas;
 
