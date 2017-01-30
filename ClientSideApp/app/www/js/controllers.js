@@ -1,26 +1,34 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http) {
+.controller('AppCtrl', function($scope, $http, loginFactory) {
 
-  $scope.serverAddress = 'http://10.212.118.204:8888/';
+  $scope.serverAddress = 'http://localhost:8888/';
 
-  $scope.loginData = {'groupe_name' : 'Groupe Des Cerises', 'groupe_id' : ''};
   $scope.currentEnigme = 0;
+  $scope.groupe_name = {"value":"Groupe Des Cerises"};
 
   // Open the login modal
   $scope.login = function() {
-    console.log(JSON.stringify($scope.loginData));
     $http({
       method: 'POST',
       url: $scope.serverAddress+'team',
       headers: { 'Content-type': 'application/json' },
-      data: { teamName: $scope.loginData.groupe_name}
+      data: { teamName: $scope.groupe_name.value}
     }).then(function successCallback(response) {
-      $scope.loginData.groupe_id = response.data;
-      console.log("IDENTIFIANT ::: "+ response.data);
-      console.log(JSON.stringify($scope.loginData));
+      loginFactory.setId(response.data);
+      loginFactory.setGroupeName($scope.groupe_name.value);
+      var alertGoodPopup = $ionicPopup.alert({
+        title: 'Groupe enregistré',
+        template: 'Votre groupe a bien été pris en compte. Vous pouvez commencer à jouer!'  ,
+        okText: 'Fermer'
+      });
     }, function errorCallback(response) {
       console.log("Couldn't get enigma.");
+      var alertGoodPopup = $ionicPopup.alert({
+        title: 'Erreur',
+        template: 'Votre groupe n\'a pas pu être enregistré. Veuillez réessayer plus tard.'  ,
+        okText: 'Fermer'
+      });
     });
   };
 })
@@ -90,7 +98,7 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('EnigmesCtrl', function($scope, $stateParams, $http, $stateParams) {
+.controller('EnigmesCtrl', function($scope, $stateParams, $http, $ionicPopup) {
   $scope.position = {x : 0, y : 0};
   $scope.setPosition = function (givenPosition){
     $scope.position.x = givenPosition.coords.latitude;
@@ -103,20 +111,18 @@ angular.module('starter.controllers', [])
     }).then(function successCallback(response) {
       $scope.enigmes = response.data;
       for (var enigme in $scope.enigmes) {
-        //console.log(JSON.stringify($scope.enigmes[enigme].coo));
-        //console.log(JSON.stringify($scope.position));
-        //coo???
-
         var a = $scope.enigmes[enigme].coo;
         var b = $scope.position;
         var distance =  $scope.getDistanceFromLatLonInKm(a.lat,a.lng,b.x,b.y);
+        console.log("::::::::::::HERE::::::::::::");
         //console.log("La distance entre l'énigme et l'user est de " + distance + " km");
         if (distance<=0.150) {
           $scope.enigmes[enigme].isAvailable = true;
-          ///XXXXXXXXXXXXXXXXXXXXXXXXXXXEnvoyer notif ici
-          console.log("envoie de notif");
-
-
+          var alertGoodPopup = $ionicPopup.alert({
+            title: 'Zone d\'énigme',
+            template: 'Vous venez d\'entrer dans la zone de l\'énigme \''+ $scope.enigmes[enigme].titre + '\'. \nAllez dans \'Enigmes\' pour la lire et la résoudre'  ,
+            okText: 'Continuer'
+          });
         }else
           $scope.enigmes[enigme].isAvailable = false;
       }
@@ -155,14 +161,13 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('EnigmeCtrl', function($scope, $stateParams, $http, $ionicPopup, socket) {
+.controller('EnigmeCtrl', function($scope, $stateParams, $http, $ionicPopup, socket, loginFactory) {
   $scope.selectedEnigme;
   $scope.answToSend = {
     "enigmaID": $stateParams.enigmeId,
-    "teamID" : $scope.loginData.groupe_id,
+    "teamID" : loginFactory.get().groupe_id,
     "answer" : ""
   };
-  $scope.isCorrect;
 
   //plusieurs énigmes ont la meme position -> meme groupe d'énigmes
   $http({
@@ -173,7 +178,6 @@ angular.module('starter.controllers', [])
     var enigmes = response.data;
     console.log("enigmes::"+JSON.stringify(enigmes));
     for (var enigme in enigmes) {
-      console.log("id::"+enigmes[enigme].id);
       if(enigmes[enigme].id == $stateParams.enigmeId)
         $scope.selectedEnigme = enigmes[enigme];
     }
@@ -183,7 +187,7 @@ angular.module('starter.controllers', [])
   });
 
   $scope.sendAnswer = function (){
-    console.log(JSON.stringify($scope.loginData));
+    //console.log(JSON.stringify($scope.loginData));
     console.log(JSON.stringify($scope.answToSend));
     socket.emit("addvalidation",  $scope.answToSend);
   };
@@ -194,41 +198,51 @@ angular.module('starter.controllers', [])
     var alertFailPopup = $ionicPopup.alert({
       title: 'Réponse envoyée',
       template: 'Un administrateur va vérifier votre réponse.',
-      okText: 'Continuer',
-      cssClass: 'failPopup'
+      okText: 'Continuer'
     });
   });
 
   //Envoyé lorsqu'un administrateur a vérifié la réponse
   socket.on('isvalidated',function(isCorrect){
-    if (isCorrect){
+    if (isCorrect === 'OK'){
       document.getElementById("answer-input").className += " true-cadre";
+      var alertGoodPopup = $ionicPopup.alert({
+        title: 'Réponse corrigée',
+        template: 'Votre réponse a été validée par un administrateur! Vous pouvez passer à l\'énigme suivante!',
+        okText: 'Continuer'
+      });
       $scope.currentEnigme++;
     }
-    else
+    else if (isCorrect === 'NOK'){
       document.getElementById("answer-input").className += " false-cadre";
+      var alertBadPopup = $ionicPopup.alert({
+        title: 'Réponse corrigée',
+        template: 'Votre réponse n\'a pas été validée. Vous devez faire valider votre réponse pour passer à l\'énigme suivante. \nVeuillez réessayer.',
+        okText: 'Continuer'
+      });
+    }
   });
 })
 
 
-  .controller('ChatCtrl', function($scope, socket) {
-    $scope.messages = [];
-    $scope.messageToSend = "";
-    socket.on('connect',function(){
-      //Add user called nickname
-      socket.emit('adduser',$scope.loginData.groupe_name);
-      console.log("Connected to socket server");
-    })
-    socket.on('updatechat',function(username, data){
-      if (username != $scope.loginData.groupe_name)
-        $scope.messages[$scope.messages.length] = {"content":data, "sender":username};
-      else
-        $scope.messages[$scope.messages.length] = {"content":data, "sender":"Vous"};
-    })
-    $scope.sendMessage = function() {
-      socket.emit("sendchat", $scope.messageToSend);
-      $scope.messageToSend = "";
-    }
+.controller('ChatCtrl', function($scope, socket) {
+  $scope.messages = [];
+  $scope.messageToSend = "";
+  socket.on('connect',function(){
+    //Add user called nickname
+    socket.emit('adduser',$scope.groupe_name.value);
+    console.log("Connected to socket server");
   })
+  socket.on('updatechat',function(username, data){
+    if (username != $scope.groupe_name.value)
+      $scope.messages[$scope.messages.length] = {"content":data, "sender":username};
+    else
+      $scope.messages[$scope.messages.length] = {"content":data, "sender":"Vous"};
+  })
+  $scope.sendMessage = function() {
+    socket.emit("sendchat", $scope.messageToSend);
+    $scope.messageToSend = "";
+  }
+})
 
 ;

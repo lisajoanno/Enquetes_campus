@@ -17,7 +17,7 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
 
   .factory('socket',function(socketFactory){
     //Create socket and connect to http://chat.socket.io
-    var myIoSocket = io.connect('http://10.212.118.204:8888/');
+    var myIoSocket = io.connect('http://localhost:8888/');
 
     mySocket = socketFactory({
       ioSocket: myIoSocket
@@ -27,31 +27,31 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
   })
 
 
-    .run(function($ionicPlatform, $rootScope) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
+  .run(function($ionicPlatform) {
+    $ionicPlatform.ready(function() {
+      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+      // for form inputs)
+      if (window.cordova && window.cordova.plugins.Keyboard) {
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        cordova.plugins.Keyboard.disableScroll(true);
 
-    }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
+      }
+      if (window.StatusBar) {
+        // org.apache.cordova.statusbar required
+        StatusBar.styleDefault();
+      }
 
-    var push = new Ionic.Push({
-      "debug": true
+      /*var push = new Ionic.Push({
+        "debug": true
+      });
+
+      push.register(function(token) {
+        console.log("My Device token:",token.token);
+        push.saveToken(token);  // persist the token in the Ionic Platform
+      });*/
+
     });
-
-    push.register(function(token) {
-      console.log("My Device token:",token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
-
-  });
-})
+  })
 
   /*.factory('positionFactory', function() {
     var posService = {};
@@ -81,6 +81,24 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
     return posService;
   })*/
 
+
+  .factory('loginFactory', function() {
+    var loginService = {};
+    var loginData = {'groupe_name' : 'Groupe Des Cerises', 'groupe_id' : ''};
+
+    loginService.setGroupeName = function(groupeName) {
+      loginData.groupe_name = groupeName;
+    };
+
+    loginService.setId = function(groupeId) {
+      loginData.groupe_id = groupeId;
+    };
+
+    loginService.get = function() {
+      return loginData;
+    };
+    return loginService;
+  })
 
 .config(function($stateProvider, $urlRouterProvider) {
 
