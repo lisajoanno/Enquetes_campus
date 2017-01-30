@@ -1,3 +1,2 @@
-web: cd Server 
-web: npm start
+web: ./Server/bin/www
     
