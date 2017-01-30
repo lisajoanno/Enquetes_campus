@@ -25,7 +25,7 @@ var insertDocuments = function(db, callback) {
     // Get the documents collection
     var collection = db.collection('documents');
     // Insert some documents
-    collection.insertMany([
+    /**collection.insertMany([
         {
             "teamName": "team1",
             "resolved": "1",
@@ -47,9 +47,8 @@ var insertDocuments = function(db, callback) {
         assert.equal(3, result.ops.length);
         console.log("Inserted 3 teams into the collection");
         callback(result);
-    });
+    });**/
 };
-
 
 exports.addATeam = function (teamName, callback) {
     MongoClient.connect(url, function(err, db) {
@@ -89,20 +88,27 @@ exports.getAllTeams = function (callback) {
     });
 };
 
-
-
 exports.teamResolvedAnEnigma = function (idTeam, idEnigma, callback) {
     console.log("la team " + idTeam + "  a validé l'enigme " + idEnigma);
     MongoClient.connect(url, function(err, db) {
         var collection = db.collection('documents');
-        collection.findOne({'teamName': idTeam}, function(err, item) {
+        collection.find({'_id': mongodb.ObjectID(idTeam) })
+            .toArray(function(err, docs) {
+                var nowResolved = docs[0].resolved + "," + idEnigma;
+                assert.equal(err, null);
+                collection.updateOne(
+                    {'_id': mongodb.ObjectID(idTeam) },
+                    { $set: { "resolved" : nowResolved }}
+                );
+            });
+        /*, function(err, item) {
             var nowResolved = item.resolved + "," + idEnigma;
             assert.equal(err, null);
             collection.updateOne(
                 {'teamName': idTeam },
                 { $set: { "resolved" : nowResolved }}
             );
-        });
+        });*/
 
     });
 };

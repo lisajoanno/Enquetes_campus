@@ -36,14 +36,14 @@ var insertStartingDocuments = function(db, callback) {
     // Get the documents collection
     var collection = db.collection('documents');
     // Insert some documents
-    collection.insertMany([
+    /**collection.insertMany([
         {
             "enigmaID": 1,
-            "teamID" : "team1",
+            "teamID" : "588f4c54370d641cb0e19fa1",
             "answer" : "le temps",
             "result" : "",
             "socketId" : 111
-        }/*,{
+        },{
             "enigmaID":3,
             "teamID" : 2,
             "answer" : "le temps 2",
@@ -55,14 +55,14 @@ var insertStartingDocuments = function(db, callback) {
             "answer" : "le temps 3",
             "result" : "",
             "socketId" : 333
-        }*/
+        }
     ], function(err, result) {
         assert.equal(err, null);
-        assert.equal(1, result.result.n);
-        assert.equal(1, result.ops.length);
+        assert.equal(0, result.result.n);
+        assert.equal(0, result.ops.length);
         console.log("La BDD a été initialisée avec " + result.result.n + " validation(s).");
         callback(result);
-    });
+    });**/
 };
 
 /**
@@ -71,7 +71,7 @@ var insertStartingDocuments = function(db, callback) {
  * @param callback
  */
 exports.addAValidation = function (json, callback) {
-    console.log("Perso j'ai reçu : " + json);
+    console.log("Perso j'ai reçu : " + json.teamID);
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection('documents');
@@ -135,7 +135,6 @@ exports.getLastValidation = function (callback) {
 };
 
 
-
 exports.setValid = function (id, callback) {
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
@@ -152,9 +151,9 @@ exports.setValid = function (id, callback) {
             });
             //callback();
         });
-
     });
 };
+
 
 exports.setNotValid = function (id, callback) {
     MongoClient.connect(url, function(err, db) {
