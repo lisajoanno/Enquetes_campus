@@ -8,12 +8,14 @@ var mongodb = require('mongodb');
 
 // Connection URL
 var url = require('./dbConfig').url;
+var collectionName = 'teams';
+
 
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
-    //db.collection('documents').drop();
-    //assert.equal(null, err);
-    console.log("Connected successfully to teams");
+    db.collection(collectionName).drop();
+    assert.equal(null, err);
+    console.log("Connected successfully to "+ collectionName);
 
     insertDocuments(db, function() {
         db.close();
@@ -23,7 +25,7 @@ MongoClient.connect(url, function(err, db) {
 // Initialization
 var insertDocuments = function(db, callback) {
     // Get the documents collection
-    var collection = db.collection('teams');
+    var collection = db.collection(collectionName);
     // Insert some documents
     /**collection.insertMany([
         {
@@ -53,7 +55,7 @@ var insertDocuments = function(db, callback) {
 exports.addATeam = function (teamName, callback) {
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
-        var collection = db.collection('teams');
+        var collection = db.collection(collectionName);
         // Insert some documents
         collection.insertMany([
             {
@@ -76,7 +78,7 @@ exports.addATeam = function (teamName, callback) {
 exports.getAllTeams = function (callback) {
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
-        var collection = db.collection('teams');
+        var collection = db.collection(collectionName);
         // Find some documents
         collection.find({}).toArray(function(err, docs) {
             assert.equal(err, null);
@@ -87,9 +89,11 @@ exports.getAllTeams = function (callback) {
     });
 };
 
+
+
 exports.teamResolvedAnEnigma = function (idTeam, idEnigma, score, callback) {
     MongoClient.connect(url, function(err, db) {
-        var collection = db.collection('teams');
+        var collection = db.collection(collectionName);
         collection.find({'_id': mongodb.ObjectID(idTeam) })
             .toArray(function(err, docs) {
                 var nowResolved = docs[0].resolved + "," + idEnigma;
@@ -101,14 +105,5 @@ exports.teamResolvedAnEnigma = function (idTeam, idEnigma, score, callback) {
                     }
                 );
             });
-        /*, function(err, item) {
-            var nowResolved = item.resolved + "," + idEnigma;
-            assert.equal(err, null);
-            collection.updateOne(
-                {'teamName': idTeam },
-                { $set: { "resolved" : nowResolved }}
-            );
-        });*/
-
     });
 };

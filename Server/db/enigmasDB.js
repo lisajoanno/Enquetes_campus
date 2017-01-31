@@ -6,15 +6,15 @@ var MongoClient = require('mongodb').MongoClient
     , assert = require('assert');
 
 var url = require('./dbConfig').url;
+var collectionName = 'enigmas';
 
-// Connection URL
 
 
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
-    //db.collection('documents').drop();
-    //assert.equal(null, err);
-    console.log("Connected successfully to enigmas");
+    db.collection(collectionName).drop();
+    assert.equal(null, err);
+    console.log("Connected successfully to "+collectionName);
 
     insertDocuments(db, function() {
         db.close();
@@ -24,7 +24,7 @@ MongoClient.connect(url, function(err, db) {
 // Initialization
 var insertDocuments = function(db, callback) {
     // Get the documents collection
-    var collection = db.collection('enigmas');
+    var collection = db.collection(collectionName);
     // Insert some documents
     collection.insertMany([
         {
@@ -80,6 +80,9 @@ var insertDocuments = function(db, callback) {
     });
 };
 
+
+
+
 /**
  * Browses all the content of a db in parameters.
  * @param db the DB to browse
@@ -87,7 +90,7 @@ var insertDocuments = function(db, callback) {
  */
 var findDocuments = function(db, callback) {
     // Get the documents collection
-    var collection = db.collection('enigmas');
+    var collection = db.collection(collectionName);
     // Find some documents
     collection.find({}).toArray(function(err, docs) {
         assert.equal(err, null);
@@ -96,6 +99,9 @@ var findDocuments = function(db, callback) {
         callback(res);
     });
 };
+
+
+
 
 /**
  * Finds all enigmas.
@@ -107,7 +113,7 @@ exports.findAllEnigmas = function(callback) {
     // Use connect method to connect to the server
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
-        var collection = db.collection('enigmas');
+        var collection = db.collection(collectionName);
         findDocuments(db, function(res) {
             db.close();
             callback(res);
@@ -115,9 +121,12 @@ exports.findAllEnigmas = function(callback) {
     });
 };
 
+
+
+
 exports.getScoreForAEnigma = function(idEnigma, callback) {
     MongoClient.connect(url, function(err, db) {
-        var collection = db.collection('enigmas');
+        var collection = db.collection(collectionName);
         var valueOfEnigmaID = parseInt(idEnigma);
         collection.find({"id" : valueOfEnigmaID})
             .toArray(function(err, docs) {
@@ -125,6 +134,4 @@ exports.getScoreForAEnigma = function(idEnigma, callback) {
             });
     });
 };
-
-//module.exports = findAllEnigmas;
 

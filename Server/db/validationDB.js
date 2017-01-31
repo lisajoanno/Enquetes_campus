@@ -12,16 +12,16 @@ var enigmaDB = require('./enigmasDB');
 
 // Connection URL
 var url = require('./dbConfig').url;
+var collectionName = 'validations';
 
 
 /**
  * Initialisation de la BDD
  */
 MongoClient.connect(url, function(err, db) {
-    // Commenter pour vider la bdd de temps en temps
-    //db.collection('documents').drop();
-    //assert.equal(null, err);
-    console.log("Connected successfully to validation");
+    db.collection(collectionName).drop();
+    assert.equal(null, err);
+    console.log("Connected successfully to " + collectionName);
     insertStartingDocuments(db, function() {
         db.close();
     });
@@ -35,7 +35,7 @@ MongoClient.connect(url, function(err, db) {
  */
 var insertStartingDocuments = function(db, callback) {
     // Get the documents collection
-    var collection = db.collection('validations');
+    var collection = db.collection(collectionName);
     // Insert some documents
     /**collection.insertMany([
         {
@@ -74,7 +74,7 @@ var insertStartingDocuments = function(db, callback) {
 exports.addAValidation = function (json, callback) {
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
-        var collection = db.collection('validations');
+        var collection = db.collection(collectionName);
         // Insert some documents
         collection.insertMany([
             json
@@ -91,7 +91,7 @@ exports.addAValidation = function (json, callback) {
 var getAValidation = function(db, callback) {
     // Get the documents collection
     MongoClient.connect(url, function(err, db) {
-        var collection = db.collection('validations');
+        var collection = db.collection(collectionName);
         // Find some documents
         collection.findOne({"result":""}, function(err, item) {
             assert.equal(err, null);
@@ -109,7 +109,7 @@ exports.getAllValidation = function (callback) {
     // Get the documents collection
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
-        var collection = db.collection('validations');
+        var collection = db.collection(collectionName);
         // Find some documents
         collection.find({}).toArray(function(err, docs) {
             assert.equal(err, null);
@@ -139,7 +139,7 @@ exports.getLastValidation = function (callback) {
 exports.setValid = function (id, callback) {
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
-        var collection = db.collection('validations');
+        var collection = db.collection(collectionName);
         collection.updateOne(
             {'_id': mongodb.ObjectID(id) },
             { $set: { "result" : "ok" }}
@@ -168,7 +168,7 @@ exports.setValid = function (id, callback) {
 exports.setNotValid = function (id, callback) {
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
-        var collection = db.collection('validations');
+        var collection = db.collection(collectionName);
         collection.updateOne(
             {'_id': mongodb.ObjectID(id) },
             { $set: { "result" : "nok" }}
@@ -198,7 +198,7 @@ var sendToClient = function(id, toSend, callback) {
     // ICI faire socket avec l'ID de la socket en BD pour l'_id
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
-        var collection = db.collection('validations');
+        var collection = db.collection(collectionName);
         collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
             assert.equal(err, null);
             if (clients[docs[0].socketId] != null) {
