@@ -2,12 +2,11 @@
  * Created by lisa on 09/01/17.
  */
 
-var MongoClient = require('mongodb').MongoClient
-    , assert = require('assert');
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
 
 var url = require('./dbConfig').url;
 var collectionName = 'enigmas';
-
 
 
 // Use connect method to connect to the server
