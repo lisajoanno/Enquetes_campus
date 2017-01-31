@@ -7,14 +7,14 @@ var MongoClient = require('mongodb').MongoClient
 
 
 // Connection URL
-var url = 'mongodb://localhost:27017/enigmas';
+var url = 'mongodb://lisa:weblisa@ds137729.mlab.com:37729/web-map-project-si5';
 
 
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
     // TODO commenter pour vider la bdd de temps en temps
     //db.collection('documents').drop();
-    assert.equal(null, err);
+    //assert.equal(null, err);
     console.log("Connected successfully to enigmas");
 
     insertDocuments(db, function() {
@@ -25,7 +25,7 @@ MongoClient.connect(url, function(err, db) {
 // Initialization
 var insertDocuments = function(db, callback) {
     // Get the documents collection
-    var collection = db.collection('documents');
+    var collection = db.collection('enigmas');
     // Insert some documents
     collection.insertMany([
         {
@@ -88,7 +88,7 @@ var insertDocuments = function(db, callback) {
  */
 var findDocuments = function(db, callback) {
     // Get the documents collection
-    var collection = db.collection('documents');
+    var collection = db.collection('enigmas');
     // Find some documents
     collection.find({}).toArray(function(err, docs) {
         assert.equal(err, null);
@@ -108,7 +108,7 @@ exports.findAllEnigmas = function(callback) {
     // Use connect method to connect to the server
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
-        var collection = db.collection('documents');
+        var collection = db.collection('enigmas');
         console.log("Connected successfully to enigmas");
         findDocuments(db, function(res) {
             db.close();
@@ -119,7 +119,7 @@ exports.findAllEnigmas = function(callback) {
 
 exports.getScoreForAEnigma = function(idEnigma, callback) {
     MongoClient.connect(url, function(err, db) {
-        var collection = db.collection('documents');
+        var collection = db.collection('enigmas');
         var valueOfEnigmaID = parseInt(idEnigma);
         collection.find({"id" : valueOfEnigmaID})
             .toArray(function(err, docs) {

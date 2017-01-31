@@ -7,12 +7,12 @@ var MongoClient = require('mongodb').MongoClient
 var mongodb = require('mongodb');
 
 // Connection URL
-var url = 'mongodb://localhost:27017/team';
+var url = 'mongodb://lisa:weblisa@ds137729.mlab.com:37729/web-map-project-si5';
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
     // TODO commenter pour vider la bdd de temps en temps
     //db.collection('documents').drop();
-    assert.equal(null, err);
+    //assert.equal(null, err);
     console.log("Connected successfully to teams");
 
     insertDocuments(db, function() {
@@ -23,7 +23,7 @@ MongoClient.connect(url, function(err, db) {
 // Initialization
 var insertDocuments = function(db, callback) {
     // Get the documents collection
-    var collection = db.collection('documents');
+    var collection = db.collection('teams');
     // Insert some documents
     /**collection.insertMany([
         {
@@ -51,9 +51,10 @@ var insertDocuments = function(db, callback) {
 };
 
 exports.addATeam = function (teamName, callback) {
+    console.log("je suis dans addateam et " + teamName);
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
-        var collection = db.collection('documents');
+        var collection = db.collection('teams');
         // Insert some documents
         collection.insertMany([
             {
@@ -77,7 +78,7 @@ exports.addATeam = function (teamName, callback) {
 exports.getAllTeams = function (callback) {
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
-        var collection = db.collection('documents');
+        var collection = db.collection('teams');
         // Find some documents
         collection.find({}).toArray(function(err, docs) {
             assert.equal(err, null);
@@ -90,7 +91,7 @@ exports.getAllTeams = function (callback) {
 
 exports.teamResolvedAnEnigma = function (idTeam, idEnigma, score, callback) {
     MongoClient.connect(url, function(err, db) {
-        var collection = db.collection('documents');
+        var collection = db.collection('teams');
         collection.find({'_id': mongodb.ObjectID(idTeam) })
             .toArray(function(err, docs) {
                 var nowResolved = docs[0].resolved + "," + idEnigma;
