@@ -15,17 +15,10 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server);
 
-
-var PORT = process.env.PORT || 8888;
-var HOST = process.env.HEROKU_URL || '0.0.0.0';
-
+var PORT = 8888;
 
 require('./db/connection').connect(function () {
-
-    server.listen(PORT, HOST, function() {
-        console.log('Listening on port %d', PORT);
-    });
-
+    server.listen(process.env.PORT || PORT);
     // placed after connect() because it needs initialized databases
     require('./db/enigmasDB').init();
     require('./db/teamDB').init();
