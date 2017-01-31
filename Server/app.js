@@ -10,10 +10,15 @@ var accessEnigmas = require('./routes/accessEnigmas');
 var gameMaster = require('./routes/validationGameMaster');
 var team = require('./routes/team');
 
-var app = express()
-    ,http = require('http')
-    ,server = http.createServer(app)
+var express = require('express'),
+    app = express(),
+    server = require('http').createServer(app),
     io = require('socket.io').listen(server);
+
+var PORT = 8888;
+
+server.listen(process.env.PORT || PORT);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -69,13 +74,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-var PORT = 8888;
-
-var listener = server.listen(PORT, function(){
-  console.log('Listening on port ' + listener.address().port);
-});
-
 
 
 

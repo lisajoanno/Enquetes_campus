@@ -11,7 +11,7 @@ block content
             $('#data').focus();};
 
     script.
-        var socket = io.connect(window.location.hostname);
+        var socket = io();
         socket.on('connect', function(){
             socket.emit('adduser', prompt("Entrez votre pseudo :"));});
         socket.on('updateusernames', function (usernames, username) {
