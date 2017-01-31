@@ -9,7 +9,7 @@
 var express = require('express');
 var router = express.Router();
 
-var teamDB = require('./teamDB');
+var teamDB = require('./../db/teamDB');
 
 /**
  *
@@ -18,7 +18,6 @@ var teamDB = require('./teamDB');
  *
  */
 router.post('/', function(req, res) {
-    //console.log("reçu : "+ req.body);
     var teamName = req.body.teamName;
     //console.log("Nouvelle team : " + teamName);
     teamDB.addATeam(teamName, function (idTeamCreated) {

@@ -11,7 +11,7 @@ var teamDB = require('./teamDB');
 var enigmaDB = require('./enigmasDB');
 
 // Connection URL
-var url = 'mongodb://lisa:weblisa@ds137729.mlab.com:37729/web-map-project-si5';
+var url = require('./dbConfig').url;
 
 
 /**

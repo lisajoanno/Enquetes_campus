@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
 var accessEnigmas = require('./routes/accessEnigmas');
 var gameMaster = require('./routes/validationGameMaster');
 var team = require('./routes/team');
@@ -29,7 +28,9 @@ app.use(cookieParser());
 app.use(express.static(__dirname + '/public'));
 
 
-
+/**
+ * Enricher of the request : all origins are accepted.
+ */
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -38,8 +39,9 @@ app.use(function(req, res, next) {
 });
 
 
-
-// error handler
+/**
+ * Environment
+ */
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -50,14 +52,18 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+
+
 app.use('/', index);
-app.use('/users', users);
 app.use('/access', accessEnigmas);
 app.use('/master', gameMaster);
 app.use('/team', team);
 
 
-// catch 404 and forward to error handler
+/**
+ * catch 404 and forward to error handler
+  */
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
@@ -67,8 +73,15 @@ app.use(function(req, res, next) {
 var PORT = 8888;
 
 var listener = server.listen(PORT, function(){
-  console.log('Listening on port ' + listener.address().port); //Listening on port 8888
+  console.log('Listening on port ' + listener.address().port);
 });
+
+
+
+
+// ------------ SOCKETS ----------
+
+
 
 // usernames which are currently connected to the chat
 var usernames = {};
@@ -76,7 +89,8 @@ var usernames = {};
 // rooms which are currently available in chat
 var rooms = ['room'];
 
-var validationDB = require('./routes/validationDB');
+// required to emit on correct socket
+var validationDB = require('./db/validationDB');
 
 // on stocke tous les clients pour récup leur socket après, via leur id session
 var clients = {};
@@ -87,7 +101,6 @@ io.sockets.on('connection', function (socket) {
 
     // when the client emits 'adduser', this listens and executes
     socket.on('adduser', function(username){
-        console.log("on tente de se connecter sous le username : " + username);
         // store the username in the socket session for this client
         socket.username = username;
         // store the room name in the socket session for this client
@@ -103,14 +116,12 @@ io.sockets.on('connection', function (socket) {
 
     // when the client emits 'sendchat', this listens and executes
     socket.on('sendchat', function (data) {
-        console.log("j'ai reçu : " + data);
         // we tell the client to execute 'updatechat' with 2 parameters
         io.sockets.in(socket.room).emit('updatechat', socket.username, data);
     });
 
     // when the user disconnects.. perform this
     socket.on('disconnect', function(){
-        console.log("on s'est déco !");
         // remove the username from global usernames list
         delete usernames[socket.username];
         // update list of users in chat, client-side

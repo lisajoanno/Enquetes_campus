@@ -5,7 +5,7 @@
 var express = require('express');
 var router = express.Router();
 
-var validationDB = require('./validationDB');
+var validationDB = require('./../db/validationDB');
 
 /**
  * ATTENTION Content-type : application/json
@@ -14,7 +14,6 @@ var validationDB = require('./validationDB');
  */
 
 router.get('/', function(req, res, next) {
-    console.log("Déjà je suis là");
     validationDB.getLastValidation(function (result) {
         if (result == null) {
             res.render('gameMaster', { title: 'Pas de nouvelle réponse proposée'});
@@ -39,18 +38,11 @@ router.get('/all', function (req,res, next) {
  *
  */
 router.post('/', function(req, res) {
-    //res.send("En attente de validation par le MDJ");
-
     validationDB.addAValidation(req.body, function () {
-        console.log("bien envoyé en BD : " + req.body.enigmasID + "");
-
-        res.send(true); // TODO à faire !!
-        // attendre
-
+        res.send(true); // TODO du coup, changer ? @Chloé
     });
 });
 
-module.exports = router;
 
 
 /**
@@ -70,3 +62,5 @@ router.post('/isNotValid', function (req,res) {
 
     })
 });
+
+module.exports = router;

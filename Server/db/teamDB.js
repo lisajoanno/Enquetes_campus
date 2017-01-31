@@ -7,10 +7,10 @@ var MongoClient = require('mongodb').MongoClient
 var mongodb = require('mongodb');
 
 // Connection URL
-var url = 'mongodb://lisa:weblisa@ds137729.mlab.com:37729/web-map-project-si5';
+var url = require('./dbConfig').url;
+
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
-    // TODO commenter pour vider la bdd de temps en temps
     //db.collection('documents').drop();
     //assert.equal(null, err);
     console.log("Connected successfully to teams");
@@ -51,7 +51,6 @@ var insertDocuments = function(db, callback) {
 };
 
 exports.addATeam = function (teamName, callback) {
-    console.log("je suis dans addateam et " + teamName);
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection('teams');
@@ -65,7 +64,6 @@ exports.addATeam = function (teamName, callback) {
         ]);
         collection.findOne({"teamName":teamName}, function(err, item) {
             assert.equal(err, null);
-            console.log("l'id de la team " + teamName + " est : " + item._id);
             callback(item._id);
         });
     });

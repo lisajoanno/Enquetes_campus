@@ -5,14 +5,13 @@
 var MongoClient = require('mongodb').MongoClient
     , assert = require('assert');
 
+var url = require('./dbConfig').url;
 
 // Connection URL
-var url = 'mongodb://lisa:weblisa@ds137729.mlab.com:37729/web-map-project-si5';
 
 
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
-    // TODO commenter pour vider la bdd de temps en temps
     //db.collection('documents').drop();
     //assert.equal(null, err);
     console.log("Connected successfully to enigmas");
@@ -76,7 +75,7 @@ var insertDocuments = function(db, callback) {
         assert.equal(err, null);
         assert.equal(4, result.result.n);
         assert.equal(4, result.ops.length);
-        console.log("Inserted 3 enigmas into the collection");
+        console.log("Inserted " + result.result.n+ " enigmas into the collection");
         callback(result);
     });
 };
@@ -109,7 +108,6 @@ exports.findAllEnigmas = function(callback) {
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
         var collection = db.collection('enigmas');
-        console.log("Connected successfully to enigmas");
         findDocuments(db, function(res) {
             db.close();
             callback(res);
