@@ -7,57 +7,12 @@ var mongodb = require('mongodb');
 // Connection URL
 var url = require('./dbConfig').url;
 var collectionName = 'teams';
-
 var mongo = require('./connection');
-var db = mongo.getDatabase();
-//db.collection(collectionName).drop();
-
-// Use connect method to connect to the server
-/*MongoClient.connect(url, function(err, db) {
-    db.collection(collectionName).drop();
-    assert.equal(null, err);
-    console.log("Connected successfully to "+ collectionName);
-
-    insertDocuments(db, function() {
-        db.close();
-    });
-});*/
-
 
 /**
-// Initialization
-var insertDocuments = function(callback) {
-    // Get the documents collection
-    var db = mongo.getDatabase();
-    var collection = db.collection(collectionName);
-    // Insert some documents
-    collection.insertMany([
-        {
-            "teamName": "team1",
-            "resolved": "1",
-            "score": 10
-        },
-        {
-            "teamName": "team2",
-            "resolved": "1,2",
-            "score": 0
-        },
-        {
-            "teamName": "team3",
-            "resolved": "1",
-            "score": 20
-        }
-    ], function(err, result) {
-        assert.equal(err, null);
-        assert.equal(3, result.result.n);
-        assert.equal(3, result.ops.length);
-        console.log("Inserted 3 teams into the collection");
-        callback(result);
-    });
-};**/
-
+ * Drop and init.
+ */
 exports.init = function () {
-    console.log("j'initie team");
     var db = mongo.getDatabase();
     db.collection(collectionName).drop();
 };

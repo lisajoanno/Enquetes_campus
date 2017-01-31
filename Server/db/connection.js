@@ -3,14 +3,15 @@
  */
 
 var MongoClient = require('mongodb').MongoClient;
-
-var assert = require('assert');
+var url = require('./dbConfig').url;
 // the one and only
 var database;
-var url = require('./dbConfig').url;
 
-
-
+/**
+ * Connect creates the database.
+ *
+ * @type {{getDatabase: module.exports.getDatabase, connect: module.exports.connect}}
+ */
 module.exports = {
     getDatabase: function() {
         return database;

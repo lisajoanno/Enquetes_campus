@@ -4,15 +4,15 @@
 
 var express = require('express');
 var router = express.Router();
-
 var validationDB = require('./../db/validationDB');
+
+
 
 /**
  * ATTENTION Content-type : application/json
  *
- * Lit la première attente de validation de la DB et l*'affiche
+ * Returns an awaiting validation (FIFO).
  */
-
 router.get('/', function(req, res, next) {
     validationDB.getLastValidation(function (result) {
         if (result == null) {
@@ -23,17 +23,26 @@ router.get('/', function(req, res, next) {
     });
 });
 
+/**
+ * Returns all validations, waiting or not.
+ */
 router.get('/all', function (req,res, next) {
-    //console.log("salut");
     validationDB.getAllValidation(function (item) {
-        //console.log(item);
         res.send(item);
     });
 });
 
+
+
 /**
  *
- * Nouvelle attente de formulation envoyée en DB
+ * POST a new awaiting validation.
+ * EXAMPLE :
+ *
+ *
+ * teamID : 5890cc58764cef34815f9502
+ * enigmaID : 3
+ * answer : life and death
  *
  *
  */
@@ -46,21 +55,25 @@ router.post('/', function(req, res) {
 
 
 /**
- * Set que la réponse proposée (body : _id) est valide en DB
+ * The validation designated by req (Example : 5890cc58764cef34815f9502) is validated in database.
  */
-router.post('/isValid', function (req,res) {
+router.post('/isValid', function (req, res) {
     validationDB.setValid(req.body.idAnswer, function () {
 
     })
 });
 
+
+
 /**
- * Set que la réponse proposée (body : _id) n'est pas valide en DB
+ * The validation designated by req (Example : 5890cc58764cef34815f9502) is NOT validated in database.
  */
 router.post('/isNotValid', function (req,res) {
     validationDB.setNotValid(req.body.idAnswer, function () {
 
     })
 });
+
+
 
 module.exports = router;

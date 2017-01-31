@@ -1,10 +1,14 @@
 /**
- * Created by lisa on 09/01/17.
+ * Created by Lisa Joanno on 09/01/17.
  */
 var assert = require('assert');
 var collectionName = 'enigmas';
 var mongo = require('./connection');
-// Initialization
+
+
+/**
+ * Initialization of some documents.
+  */
 function insertDocuments() {
     // Get the documents collection
     var db = mongo.getDatabase();
@@ -63,8 +67,10 @@ function insertDocuments() {
     });
 };
 
+/**
+ * Drop and init.
+ */
 exports.init = function () {
-    console.log("j'initie enigmas");
     var db = mongo.getDatabase();
     db.collection(collectionName).drop();
     insertDocuments();
@@ -77,14 +83,11 @@ exports.init = function () {
  * @param callback what to do with the result.
  */
 var findDocuments = function(db, callback) {
-    // Get the documents collection
-    var db = mongo.getDatabase();
     var collection = db.collection(collectionName);
     // Find some documents
     collection.find({}).toArray(function(err, docs) {
         assert.equal(err, null);
         res = JSON.stringify(docs, null, 2);
-        //console.log("T : "+res);
         callback(res);
     });
 };
@@ -99,16 +102,18 @@ var findDocuments = function(db, callback) {
  */
 exports.findAllEnigmas = function(callback) {
     var db = mongo.getDatabase();
-    var collection = db.collection(collectionName);
     findDocuments(db, function(res) {
-        db.close();
         callback(res);
     });
 };
 
 
-
-
+/**
+ * Returns the score for a given enigma designated by its id (example : 3).
+ *
+ * @param idEnigma
+ * @param callback
+ */
 exports.getScoreForAEnigma = function(idEnigma, callback) {
     var db = mongo.getDatabase();
     var collection = db.collection(collectionName);

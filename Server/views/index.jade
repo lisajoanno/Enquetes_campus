@@ -34,8 +34,8 @@ block content
         });
         socket.on('updatechat', function (username, data) {
             var name = document.getElementById("me");
-            console.log("name = " + name.innerHTML);
-            console.log("username = " + username);
+            //console.log("name = " + name.innerHTML);
+            //console.log("username = " + username);
             if(name.innerHTML === username) {
                 $('.chat').append('<li class=\"self\"><div class=\"msg\"><p>' + data + '</p></div></li>');
 
@@ -45,6 +45,7 @@ block content
             bottom();
         });$(function(){ $('#datasend').click( function() {
             var message = $('#data').val(); $('#data').val('');
+            message = message.replace(new RegExp("<", "g"), '&lt;').replace(new RegExp(">", "g"), '&gt;');
             socket.emit('sendchat', message);});$('#data').keypress(function(e) {
         if(e.which == 13) {$(this).blur();$('#datasend').focus().click();}});});
     header(id="top" class="header")

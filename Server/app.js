@@ -19,6 +19,7 @@ var PORT = 8888;
 
 require('./db/connection').connect(function () {
     server.listen(process.env.PORT || PORT);
+    // placed after connect() because it needs initialized databases
     require('./db/enigmasDB').init();
     require('./db/teamDB').init();
     require('./db/validationDB').init();

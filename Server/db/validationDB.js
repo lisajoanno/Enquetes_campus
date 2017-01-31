@@ -17,65 +17,10 @@ var collectionName = 'validations';
 var mongo = require('./connection');
 
 exports.init = function () {
-    console.log("j'initie validation");
     var db = mongo.getDatabase();
     db.collection(collectionName).drop();
 };
 
-/**
- * Initialisation de la BDD
- */
-/**
-MongoClient.connect(url, function(err, db) {
-    db.collection(collectionName).drop();
-    assert.equal(null, err);
-    console.log("Connected successfully to " + collectionName);
-    insertStartingDocuments(db, function() {
-        db.close();
-    });
-});
- **/
-
-/**
- * Insère quelques documents dans la BDD pour l'initialiser
- *
- * @param db
- * @param callback
- */
-/**var insertStartingDocuments = function(db, callback) {
-    // Get the documents collection
-
-    var db = mongo.getDatabase();
-    var collection = db.collection(collectionName);
-    // Insert some documents
-    collection.insertMany([
-        {
-            "enigmaID": 1,
-            "teamID" : "588f4c54370d641cb0e19fa1",
-            "answer" : "le temps",
-            "result" : "",
-            "socketId" : 111
-        },{
-            "enigmaID":3,
-            "teamID" : 2,
-            "answer" : "le temps 2",
-            "result" : "",
-            "socketId" : 222
-        },{
-            "enigmaID":2,
-            "teamID" : 7,
-            "answer" : "le temps 3",
-            "result" : "",
-            "socketId" : 333
-        }
-    ], function(err, result) {
-        assert.equal(err, null);
-        assert.equal(0, result.result.n);
-        assert.equal(0, result.ops.length);
-        console.log("La BDD a été initialisée avec " + result.result.n + " validation(s).");
-        callback(result);
-    });
-};**/
 
 /**
  * Ajoute le json en param dans la DB des validations
