@@ -13,7 +13,7 @@ var url = 'mongodb://localhost:27017/enigmas';
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
     // TODO commenter pour vider la bdd de temps en temps
-    db.collection('documents').drop();
+    //db.collection('documents').drop();
     assert.equal(null, err);
     console.log("Connected successfully to enigmas");
 
