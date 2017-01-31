@@ -1,5 +1,7 @@
 var xhr = new XMLHttpRequest;
-var url =  require('./constants').urlClient;
+
+var url = 'https://web-map-project-si5.herokuapp.com';
+//var url = 'http://localhost:8888';
 
 var isValid = function () {
     var idBD = document.getElementById("idAnswer").getAttribute("myId");
