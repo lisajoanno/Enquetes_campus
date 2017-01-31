@@ -105,7 +105,6 @@ var getAValidation = function(db, callback) {
  * @param callback
  */
 exports.getAllValidation = function (callback) {
-    //callback("salut");
     // Get the documents collection
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
@@ -114,7 +113,6 @@ exports.getAllValidation = function (callback) {
         collection.find({}).toArray(function(err, docs) {
             assert.equal(err, null);
             res = JSON.stringify(docs, null, 2);
-            //console.log("T : "+res);
             callback(res);
         });
     });
@@ -137,6 +135,7 @@ exports.getLastValidation = function (callback) {
 
 
 exports.setValid = function (id, callback) {
+    console.log("JE SET QUELQUE CHOSE DE VALIDE.");
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection(collectionName);
@@ -166,6 +165,7 @@ exports.setValid = function (id, callback) {
 
 
 exports.setNotValid = function (id, callback) {
+    console.log("JE SET QUELQUE CHOSE DE PAS VALIDE.")
     MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection(collectionName);

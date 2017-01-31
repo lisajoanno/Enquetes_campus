@@ -1,9 +1,11 @@
 var xhr = new XMLHttpRequest;
+var url =  require('./constants').urlClient;
 
 var isValid = function () {
     var idBD = document.getElementById("idAnswer").getAttribute("myId");
-    xhr.open("POST", "http://localhost:8888/master/isValid", true);
+    xhr.open("POST", url + "/master/isValid", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    console.log("j'ai posté dans isValid " + idBD);
     var json = {idAnswer : idBD};
     xhr.send(JSON.stringify(json));
 
@@ -18,8 +20,9 @@ var isValid = function () {
 var isNotValid = function () {
     var idBD = document.getElementById("idAnswer").getAttribute("myId");
 
-    xhr.open("POST", "http://localhost:8888/master/isNotValid", true);
+    xhr.open("POST", url + "/master/isNotValid", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    console.log("j'ai posté dans isNotValid " + idBD);
     var json = {idAnswer : idBD};
     xhr.send(JSON.stringify(json));
 
