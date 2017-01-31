@@ -7,7 +7,6 @@ var isValid = function () {
     var idBD = document.getElementById("idAnswer").getAttribute("myId");
     xhr.open("POST", url + "/master/isValid", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    console.log("j'ai posté dans isValid " + idBD);
     var json = {idAnswer : idBD};
     xhr.send(JSON.stringify(json));
 
@@ -24,7 +23,6 @@ var isNotValid = function () {
 
     xhr.open("POST", url + "/master/isNotValid", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    console.log("j'ai posté dans isNotValid " + idBD);
     var json = {idAnswer : idBD};
     xhr.send(JSON.stringify(json));
 

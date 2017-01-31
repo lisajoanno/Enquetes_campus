@@ -3,13 +3,28 @@
  */
 
 var MongoClient = require('mongodb').MongoClient;
-var database = require('./database');
-MongoClient.connect(url, function (err, db) {
-    if (err) {
-        return console.log(err);
-    }
-    database.
-    assert.equal(null, err);
-    console.log("Connected successfully to "+collectionName);
 
-});
+var assert = require('assert');
+// the one and only
+var database;
+var url = require('./dbConfig').url;
+
+
+
+module.exports = {
+    getDatabase: function() {
+        return database;
+    },
+    connect: function (callback) {
+        MongoClient.connect(url, function (err, db) {
+            if (err) {
+                return console.log(err);
+            }
+            database = db;
+            console.log("Connected successfully to MongoDB.");
+
+            callback();
+        });
+    }
+};
+

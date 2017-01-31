@@ -14,10 +14,18 @@ var enigmaDB = require('./enigmasDB');
 var url = require('./dbConfig').url;
 var collectionName = 'validations';
 
+var mongo = require('./connection');
+
+exports.init = function () {
+    console.log("j'initie validation");
+    var db = mongo.getDatabase();
+    db.collection(collectionName).drop();
+};
 
 /**
  * Initialisation de la BDD
  */
+/**
 MongoClient.connect(url, function(err, db) {
     db.collection(collectionName).drop();
     assert.equal(null, err);
@@ -26,6 +34,7 @@ MongoClient.connect(url, function(err, db) {
         db.close();
     });
 });
+ **/
 
 /**
  * Insère quelques documents dans la BDD pour l'initialiser
@@ -33,11 +42,13 @@ MongoClient.connect(url, function(err, db) {
  * @param db
  * @param callback
  */
-var insertStartingDocuments = function(db, callback) {
+/**var insertStartingDocuments = function(db, callback) {
     // Get the documents collection
+
+    var db = mongo.getDatabase();
     var collection = db.collection(collectionName);
     // Insert some documents
-    /**collection.insertMany([
+    collection.insertMany([
         {
             "enigmaID": 1,
             "teamID" : "588f4c54370d641cb0e19fa1",
@@ -63,8 +74,8 @@ var insertStartingDocuments = function(db, callback) {
         assert.equal(0, result.ops.length);
         console.log("La BDD a été initialisée avec " + result.result.n + " validation(s).");
         callback(result);
-    });**/
-};
+    });
+};**/
 
 /**
  * Ajoute le json en param dans la DB des validations
@@ -72,15 +83,13 @@ var insertStartingDocuments = function(db, callback) {
  * @param callback
  */
 exports.addAValidation = function (json, callback) {
-    MongoClient.connect(url, function(err, db) {
-        // Get the documents collection
-        var collection = db.collection(collectionName);
-        // Insert some documents
-        collection.insertMany([
-            json
-        ]);
-        callback();
-    });
+    var db = mongo.getDatabase();
+    var collection = db.collection(collectionName);
+    // Insert some documents
+    collection.insertMany([
+        json
+    ]);
+    callback();
 };
 
 /**
@@ -88,15 +97,13 @@ exports.addAValidation = function (json, callback) {
  * @param db
  * @param callback
  */
-var getAValidation = function(db, callback) {
-    // Get the documents collection
-    MongoClient.connect(url, function(err, db) {
-        var collection = db.collection(collectionName);
-        // Find some documents
-        collection.findOne({"result":""}, function(err, item) {
-            assert.equal(err, null);
-            callback(item);
-        });
+var getAValidation = function(callback) {
+    var db = mongo.getDatabase();
+    var collection = db.collection(collectionName);
+    // Find some documents
+    collection.findOne({"result":""}, function(err, item) {
+        assert.equal(err, null);
+        callback(item);
     });
 };
 
@@ -105,16 +112,13 @@ var getAValidation = function(db, callback) {
  * @param callback
  */
 exports.getAllValidation = function (callback) {
-    // Get the documents collection
-    MongoClient.connect(url, function(err, db) {
-        // Get the documents collection
-        var collection = db.collection(collectionName);
-        // Find some documents
-        collection.find({}).toArray(function(err, docs) {
-            assert.equal(err, null);
-            res = JSON.stringify(docs, null, 2);
-            callback(res);
-        });
+    var db = mongo.getDatabase();
+    var collection = db.collection(collectionName);
+    // Find some documents
+    collection.find({}).toArray(function(err, docs) {
+        assert.equal(err, null);
+        res = JSON.stringify(docs, null, 2);
+        callback(res);
     });
 };
 
@@ -123,58 +127,44 @@ exports.getAllValidation = function (callback) {
  * @param callback
  */
 exports.getLastValidation = function (callback) {
-    // Use connect method to connect to the server
-    MongoClient.connect(url, function(err, db) {
-        assert.equal(null, err);
-        getAValidation(db, function(res) {
-            db.close();
-            callback(res);
-        });
+    getAValidation(function(res) {
+        callback(res);
     });
 };
 
 
 exports.setValid = function (id, callback) {
-    console.log("JE SET QUELQUE CHOSE DE VALIDE.");
-    MongoClient.connect(url, function(err, db) {
-        // Get the documents collection
-        var collection = db.collection(collectionName);
-        collection.updateOne(
-            {'_id': mongodb.ObjectID(id) },
-            { $set: { "result" : "ok" }}
-        );
-        collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
-            assert.equal(err, null);
+    var db = mongo.getDatabase();
+    var collection = db.collection(collectionName);
+    collection.updateOne(
+        {'_id': mongodb.ObjectID(id) },
+        { $set: { "result" : "ok" }}
+    );
+    collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
+        assert.equal(err, null);
 
-            /*
-            on va chercher le score que rapport l'énigme
-             */
-            enigmaDB.getScoreForAEnigma(docs[0].enigmaID, function (scoreFound) {
-                teamDB.teamResolvedAnEnigma(docs[0].teamID, docs[0].enigmaID, scoreFound , function () {
-                    sendToClient(id, "ok", callback);
-                    callback();
-                });
+        /*
+        on va chercher le score que rapport l'énigme
+         */
+        enigmaDB.getScoreForAEnigma(docs[0].enigmaID, function (scoreFound) {
+            teamDB.teamResolvedAnEnigma(docs[0].teamID, docs[0].enigmaID, scoreFound , function () {
+                sendToClient(id, "ok", callback);
+                callback();
             });
-
-
-
-            //callback();
         });
     });
 };
 
 
 exports.setNotValid = function (id, callback) {
-    console.log("JE SET QUELQUE CHOSE DE PAS VALIDE.")
-    MongoClient.connect(url, function(err, db) {
-        // Get the documents collection
-        var collection = db.collection(collectionName);
-        collection.updateOne(
-            {'_id': mongodb.ObjectID(id) },
-            { $set: { "result" : "nok" }}
-        );
-        callback();
-    });
+    var db = mongo.getDatabase();
+    var collection = db.collection(collectionName);
+    collection.updateOne(
+        {'_id': mongodb.ObjectID(id) },
+        { $set: { "result" : "nok" }}
+    );
+    callback();
+
     sendToClient(id, "nok", callback);
 };
 
@@ -196,7 +186,7 @@ exports.setSockets = function(listSocket) {
 var sendToClient = function(id, toSend, callback) {
     var socketId;
     // ICI faire socket avec l'ID de la socket en BD pour l'_id
-    MongoClient.connect(url, function(err, db) {
+    // MongoClient.connect(url, function(err, db) {
         // Get the documents collection
         var collection = db.collection(collectionName);
         collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
@@ -206,7 +196,7 @@ var sendToClient = function(id, toSend, callback) {
             }
             callback();
         });
-    });
+    // });
 };
 
 

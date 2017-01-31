@@ -7,5 +7,5 @@ URL de la base de données en Production sur heroku : mongodb://lisa:weblisa@ds1
  */
 
 module.exports = {
-    url: process.env.MONGO_URI || 'mongodb://localhost:27017/'
+    url: process.env.MONGO_URI || 'mongodb://localhost:27017/web'
 };

@@ -17,7 +17,12 @@ var express = require('express'),
 
 var PORT = 8888;
 
-server.listen(process.env.PORT || PORT);
+require('./db/connection').connect(function () {
+    server.listen(process.env.PORT || PORT);
+    require('./db/enigmasDB').init();
+    require('./db/teamDB').init();
+    require('./db/validationDB').init();
+});
 
 
 // view engine setup
@@ -45,7 +50,7 @@ app.use(function(req, res, next) {
 
 
 /**
- * Environment
+ * Environment : Ecolo jusqu'au bout ! Coucou =)
  */
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
