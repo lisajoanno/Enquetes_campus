@@ -18,12 +18,14 @@ var express = require('express'),
 
 var PORT = process.env.PORT || 8888;
 var HOST = process.env.HEROKU_URL || '0.0.0.0';
-server.listen(PORT, HOST, function() {
-    console.log('Listening on port %d', PORT);
-});
+
 
 require('./db/connection').connect(function () {
-    server.listen(process.env.PORT || PORT);
+
+    server.listen(PORT, HOST, function() {
+        console.log('Listening on port %d', PORT);
+    });
+
     // placed after connect() because it needs initialized databases
     require('./db/enigmasDB').init();
     require('./db/teamDB').init();
