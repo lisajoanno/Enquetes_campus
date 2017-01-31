@@ -4,7 +4,8 @@ angular.module('starter.controllers', [])
 
   $scope.serverAddress = 'http://localhost:8888/';
 
-  $scope.currentEnigme = 0;
+  $scope.currentEnigme = 4;
+  $scope.isInScopeForCurrent = false;
   $scope.groupe_name = {"value":"Groupe Des Cerises"};
 
   // Open the login modal
@@ -99,6 +100,7 @@ angular.module('starter.controllers', [])
 
 
 .controller('EnigmesCtrl', function($scope, $stateParams, $http, $ionicPopup) {
+
   $scope.position = {x : 0, y : 0};
   $scope.setPosition = function (givenPosition){
     $scope.position.x = givenPosition.coords.latitude;
@@ -114,17 +116,32 @@ angular.module('starter.controllers', [])
         var a = $scope.enigmes[enigme].coo;
         var b = $scope.position;
         var distance =  $scope.getDistanceFromLatLonInKm(a.lat,a.lng,b.x,b.y);
-        console.log("::::::::::::HERE::::::::::::");
+        console.log("in scope : "+$scope.isInScopeForCurrent);
         //console.log("La distance entre l'énigme et l'user est de " + distance + " km");
-        if (distance<=0.150) {
-          $scope.enigmes[enigme].isAvailable = true;
-          var alertGoodPopup = $ionicPopup.alert({
-            title: 'Zone d\'énigme',
-            template: 'Vous venez d\'entrer dans la zone de l\'énigme \''+ $scope.enigmes[enigme].titre + '\'. \nAllez dans \'Enigmes\' pour la lire et la résoudre'  ,
-            okText: 'Continuer'
-          });
-        }else
+        if (distance<=0.150 && !$scope.isInScopeForCurrent) {   //Si on arrive dans une zone d'énigme
+          if ($scope.enigmes[enigme].id == $scope.currentEnigme) { //Si on arrive dans la portée de la bonne enigme
+             $scope.enigmes[enigme].isAvailable = true;
+            var alertGoodPopup = $ionicPopup.alert({
+              title: 'Zone d\'énigme',
+              template: 'Vous venez d\'entrer dans la zone de l\'énigme \'' + $scope.enigmes[enigme].titre + '\'. \nAllez dans \'Enigmes\' pour la lire et la résoudre.',
+              okText: 'Continuer'
+            });
+            $scope.isInScopeForCurrent = true;
+          } else { //Si on arrive dans la portée d'une énigme avant d'avoir fait celles d'avant
+            var alertGoodPopup = $ionicPopup.alert({
+              title: 'Zone d\'énigme',
+              template: 'Vous venez d\'entrer dans la zone de l\'énigme \'' + $scope.enigmes[enigme].titre + '\'. \nVous devez résoudre celles d\'avant pour faire celle-ci.',
+              okText: 'Continuer'
+            });
+          }
+        } else if  (distance <= 0.150 && $scope.isInScopeForCurrent && $scope.enigmes[enigme].id == $scope.currentEnigme )
+          //Si on était déjà dans la zone pour l'énigme courrante
+             $scope.enigmes[enigme].isAvailable = true;
+        else {  //Si on est pas dans une zone énigme
           $scope.enigmes[enigme].isAvailable = false;
+          if ($scope.enigmes[enigme].id == $scope.currentEnigme) //si on sort de la zone énigme pour l'énigme courrante
+            $scope.isInScopeForCurrent = false;
+        }
       }
     }, function errorCallback(response) {
       console.log("Couldn't get enigma.");
@@ -212,6 +229,7 @@ angular.module('starter.controllers', [])
         okText: 'Continuer'
       });
       $scope.currentEnigme++;
+      $scope.isInScopeForCurrent = false;
     }
     else if (isCorrect === 'NOK'){
       document.getElementById("answer-input").className += " false-cadre";
