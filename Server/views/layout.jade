@@ -4,6 +4,7 @@ html
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
     link(rel='stylesheet', href='/css/custom-chat.css')
+    link(rel='stylesheet', href='/css/menu.css')
     script(src='http://code.jquery.com/jquery-1.11.3.min.js')
     script(type='text/javascript', src='/js/bootstrap.min.js')
     script(type='text/javascript', src='/socket.io/socket.io.js')
@@ -11,4 +12,17 @@ html
     title= title
 
     body
+      nav(role='navigation')
+        ul
+          li
+            a(href='/') Home
+          li
+            a(href='/master') Valider des réponses
+          li
+            a(href='/chat') Chatter avec les joueurs
+          li
+            a(href='/team/all') Voir la liste des équipes
+          li
+            a(href='/master/all') Voir la liste des réponses en attente
+
       block content
