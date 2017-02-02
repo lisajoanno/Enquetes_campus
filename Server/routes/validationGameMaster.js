@@ -28,7 +28,7 @@ router.get('/', function(req, res, next) {
  */
 router.get('/all', function (req,res, next) {
     validationDB.getAllValidation(function (item) {
-        res.send(item);
+        res.render('listDisplay', {listName : "validations en attente", list: item});
     });
 });
 
