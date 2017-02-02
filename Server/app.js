@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
+var chat = require('./routes/chat');
 var accessEnigmas = require('./routes/accessEnigmas');
 var gameMaster = require('./routes/validationGameMaster');
 var team = require('./routes/team');
@@ -67,6 +68,7 @@ app.use(function(err, req, res, next) {
 
 
 app.use('/', index);
+app.use('/chat', chat);
 app.use('/enigmas', accessEnigmas);
 app.use('/master', gameMaster);
 app.use('/team', team);

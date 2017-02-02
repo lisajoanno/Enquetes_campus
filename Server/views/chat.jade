@@ -1,0 +1,65 @@
+extends layout
+
+block content
+
+    script(src="/socket.io/socket.io.js")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js")
+
+    script.
+        function bottom() {
+            document.getElementById( 'bottom' ).scrollIntoView();
+            $('#data').focus();};
+
+    script.
+        var socket = io();
+        socket.on('connect', function(){
+            socket.emit('adduser', prompt("Entrez votre pseudo :"));});
+        socket.on('updateusernames', function (usernames, username) {
+            for (u in usernames) {
+                if (u === username) {
+                    $('#liste-personnes').append('<b id=\"me\">' + u + '</b><br />');
+                }
+                    else
+                {
+                    $('#liste-personnes').append('<b id=\"' + u + '\">' + u + '<br /></b>');
+                }
+            }
+        });
+        socket.on('updateusername', function(username) {
+            $('#liste-personnes').append('<b id=\"' + username + '\">' + username + '<br /></b>');
+        });
+        socket.on('removeuser', function(username) {
+            var elem = document.getElementById(username);
+            elem.parentNode.removeChild(elem);
+        });
+        socket.on('updatechat', function (username, data) {
+            var name = document.getElementById("me");
+            //console.log("name = " + name.innerHTML);
+            //console.log("username = " + username);
+            if(name.innerHTML === username) {
+                $('.chat').append('<li class=\"self\"><div class=\"msg\"><p>' + data + '</p></div></li>');
+
+            } else {
+                $('.chat').append('<li class=\"other\"><div class=\"msg\"><div class=\"user\">' + username + '</div> <p>' + data + '</p></div></li>');
+            }
+            bottom();
+        });$(function(){ $('#datasend').click( function() {
+            var message = $('#data').val(); $('#data').val('');
+            message = message.replace(new RegExp("<", "g"), '&lt;').replace(new RegExp(">", "g"), '&gt;');
+            socket.emit('sendchat', message);});$('#data').keypress(function(e) {
+        if(e.which == 13) {$(this).blur();$('#datasend').focus().click();}});});
+    header(id="top" class="header")
+        h1(class="text-center" style="margin-top: 0px;") TzenTzen
+        div
+            div(class="col-md-3")
+                div(class="lst-pers" style="position: fixed; background-color: white;padding: 1em;")
+                    h2 Utilisateurs en ligne
+                    div(id="liste-personnes")
+            div(id="conversation" class="col-md-6")
+                ol(class="chat")
+            div(class="col-md-3")
+        div(id="bottom")
+    div(class="container")
+       div(class="row")
+            input(id="data" class="col-sm-10 col-xs-8" style="width:83%;position: fixed; left: 0; bottom: 0;" autofocus)
+            input(type="button" onclick="bottom();" class="col-sm-2 btn-success" id="datasend" value="Envoyer" style="border-radius: 1em;height: 2em; position: fixed; right: 0; bottom: 0;")
