@@ -47,20 +47,23 @@ angular.module('starter.controllers', [])
 
   //Affichage de la position
   $scope.position = {x : 0, y : 0};
+  var marker;
   $scope.setPosition = function (givenPosition){
     $scope.position.x = givenPosition.coords.latitude;
     $scope.position.y = givenPosition.coords.longitude;
     var latlng = new google.maps.LatLng($scope.position.x, $scope.position.y);
 
     // Ajout d'un pointeur
-    var marker = new google.maps.Marker({
-      position: latlng,
-      map: map,
-      title:"You are here"
-    });
+    if (typeof marker == 'undefined') {
+      marker = new google.maps.Marker({
+        position: latlng,
+        map: map,
+        title: "You are here"
+      });
+    }
+    else marker.setPosition(latlng);
     // centre la carte sur la position
     map.panTo(latlng);
-    //console.log(position.x + " - "+ position.y);
   };
   $scope.showError = function (error){
     console.log("Error - Couldn't find position - "+ error);
