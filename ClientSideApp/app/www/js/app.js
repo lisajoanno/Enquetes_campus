@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 'starter.controllers'])
+angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 'starter.controllers', 'ngCordova'])
 
 // Identify App
   .config(['$ionicAppProvider', function($ionicAppProvider) {
@@ -17,7 +17,7 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
 
   .factory('socket',function(socketFactory){
     //Create socket and connect to http://chat.socket.io
-    var myIoSocket = io.connect('http://localhost:8888/');
+    var myIoSocket = io.connect('https://web-map-project-si5.herokuapp.com/');
 
     mySocket = socketFactory({
       ioSocket: myIoSocket
@@ -53,33 +53,50 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
     });
   })
 
-  /*.factory('positionFactory', function() {
+  .factory('positionFactory', function($cordovaGeolocation) {
     var posService = {};
-    var position= {};
+    var position = {x : 0, y : 0};
 
-    setPosition = function (givenPosition){
-      position.x = givenPosition.coords.latitude;
-      position.y = givenPosition.coords.longitude;
-      console.log(position.x + " - "+ position.y);
-    };
-    showError = function (error){
-      console.log("Error - Couldn't find position");
+    posService.beginWatch = function() {
+      var posOptions = {timeout: 10000, enableHighAccuracy: false};
+      $cordovaGeolocation
+        .getCurrentPosition(posOptions)
+
+        .then(function (position) {
+          var lat  = position.coords.latitude;
+          var long = position.coords.longitude;
+          console.log('position avec cordova plugin'+lat + '-' + long);
+          position.x = lat;
+          position.y = long;
+        }, function(err) {
+          console.log(err)
+        });
+
+      var watchOptions = {timeout : 3000, enableHighAccuracy: false};
+      var watch = $cordovaGeolocation.watchPosition(watchOptions);
+
+      watch.then(
+        null,
+        function(err) {
+          console.log(err)
+        },
+        function(position) {
+          var lat  = position.coords.latitude;
+          var long = position.coords.longitude;
+          console.log('position avec cordova plugin'+lat + '-' + long);
+          position.x = lat;
+          position.y = long;
+        }
+      );
+      watch.clearWatch();
     };
 
-    posService.set = function() {
-      if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(setPosition,showError);
-       // navigator.geolocation.getCurrentPosition(setPosition,showError);
-      } else{
-        console.log("Geolocation is not supported by this browser.");
-      }
-
-    };
     posService.get = function() {
+      console.log("someone is using position "+ JSON.stringify(position));
       return position;
     };
     return posService;
-  })*/
+  })
 
 
   .factory('loginFactory', function() {

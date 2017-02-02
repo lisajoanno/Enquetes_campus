@@ -1,8 +1,7 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http, loginFactory) {
-
-  $scope.serverAddress = 'http://localhost:8888/';
+.controller('AppCtrl', function($scope, $http, loginFactory, $ionicPopup, positionFactory) {
+  $scope.serverAddress = 'https://web-map-project-si5.herokuapp.com/';
 
   $scope.currentEnigme = 4;
   $scope.isInScopeForCurrent = false;
@@ -23,6 +22,7 @@ angular.module('starter.controllers', [])
         template: 'Votre groupe a bien été pris en compte. Vous pouvez commencer à jouer!'  ,
         okText: 'Fermer'
       });
+      positionFactory.beginWatch();
     }, function errorCallback(response) {
       console.log("Couldn't get enigma.");
       var alertGoodPopup = $ionicPopup.alert({
@@ -44,11 +44,11 @@ angular.module('starter.controllers', [])
     zoom: 15
   };
   var map = new google.maps.Map(document.getElementById("map"), optionsGmaps);
-  //console.log(JSON.stringify($scope.enigmes));
 
   //Affichage de la position
   $scope.position = {x : 0, y : 0};
   $scope.setPosition = function (givenPosition){
+    alert("in set pos : "+ $scope.position.x + ' ' + $scope.position.y)
     $scope.position.x = givenPosition.coords.latitude;
     $scope.position.y = givenPosition.coords.longitude;
     var latlng = new google.maps.LatLng($scope.position.x, $scope.position.y);
@@ -76,7 +76,7 @@ angular.module('starter.controllers', [])
   //Affichage de la position des énigmes
   $http({
     method: 'GET',
-    url: $scope.serverAddress+'access',
+    url: $scope.serverAddress+'enigmas',
     headers: { 'Content-type': 'application/json' }
   }).then(function successCallback(response) {
     var enigmes = response.data;
@@ -108,7 +108,7 @@ angular.module('starter.controllers', [])
     //plusieurs énigmes ont la meme position -> meme groupe d'énigmes
     $http({
       method: 'GET',
-      url: $scope.serverAddress+'access',
+      url: $scope.serverAddress+'enigmas',
       headers: { 'Content-type': 'application/json' }
     }).then(function successCallback(response) {
       $scope.enigmes = response.data;
@@ -189,7 +189,7 @@ angular.module('starter.controllers', [])
   //plusieurs énigmes ont la meme position -> meme groupe d'énigmes
   $http({
     method: 'GET',
-    url: $scope.serverAddress+'access',
+    url: $scope.serverAddress+'enigmas',
     headers: { 'Content-type': 'application/json' }
   }).then(function successCallback(response) {
     var enigmes = response.data;
