@@ -73,3 +73,6 @@ body {
     margin: 2em;
     margin-top: 8em;
 }
+input[type=button] {
+    margin-right: 1em;
+}

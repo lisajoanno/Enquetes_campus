@@ -6,16 +6,14 @@ extends layout
 block content
     script(src="/javascripts/validationPage.js")
     h1= title
-        div(id="myEnigma", style="display:block")
-            p #{message}
-            p De la team : #{team}
-            p Pour l'enigme : #{enigma}
-            p Réponse proposée : #{answer}
-            //p Réponse proposée : #{result}
-            div(id="idAnswer" myId='#{id}')
-            input(type='button', value='Valider', onclick='isValid()')
-            input(type='button', value='Refuser', onclick='isNotValid()')
-            input(type='button', value='Actualiser', onClick="window.location.reload()")
-        div(id="answerSent", style="display:none")
-            p a
-            input(type='button', value='Une autre !', onClick="window.location.reload()")
+    div(id="myEnigma", style="display:block")
+        p De la team : #{team}
+        p Pour l'enigme : #{enigma}
+        p Réponse proposée : #{answer}
+        div(id="idAnswer" myId='#{id}')
+        input(type='button', value='Valider', onclick='isValid()', class='btn btn-success btn-lg')
+        input(type='button', value='Refuser', onclick='isNotValid()', class='btn btn-danger btn-lg')
+        input(type='button', value='Actualiser', onClick="window.location.reload()", class='btn btn-info btn-lg')
+    div(id="answerSent", style="display:none")
+        p a
+        input(type='button', value='Une autre !', onClick="window.location.reload()", class='btn btn-info btn-lg')
