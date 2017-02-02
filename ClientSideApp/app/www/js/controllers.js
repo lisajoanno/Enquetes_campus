@@ -48,7 +48,6 @@ angular.module('starter.controllers', [])
   //Affichage de la position
   $scope.position = {x : 0, y : 0};
   $scope.setPosition = function (givenPosition){
-    alert("in set pos : "+ $scope.position.x + ' ' + $scope.position.y)
     $scope.position.x = givenPosition.coords.latitude;
     $scope.position.y = givenPosition.coords.longitude;
     var latlng = new google.maps.LatLng($scope.position.x, $scope.position.y);
