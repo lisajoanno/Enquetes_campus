@@ -17,52 +17,62 @@ function insertDocuments() {
     collection.insertMany([
         {
             "id": 1,
-            "titre" : "Un jeu vraiment trop fun !",
+            "titre" : "L'énigme du sphinx",
             "coo" : {
                 lat: 43.6210156491945,
                 lng: 7.066354751586914
             },
-            "image": "enigmas-pics/enigma-1.jpg",
+            "image": "pics/sphinx.png",
             "point" : 10,
-            "contenu" : "A quel endroit correspond cette image ?"
+            "contenu" : "Qu'est ce qui le matin marche à quatre pattes, le midi à deux et le soir à trois ?"
         },
         {
             "id": 2,
-            "titre" : "L'énigme du sphinx",
+            "titre" : "L'énigme du sphinx : le retour",
             "coo" : {
                 lat: 43.61910809278851,
                 lng: 7.0741868019104
             },
-            "image": "pics/sphinx.jpg",
+            "image": "pics/sphinx.png",
             "point" : 20,
-            "contenu" : "Qu'est ce qui le matin marche à quatre pattes, le midi à deux et le soir à trois ?"
+            "contenu" : "La première engendre la seconde et la seconde engendre la première."
         },
         {
             "id": 3,
-            "titre" : "Le retour du jeu vraiment super fun",
+            "titre" : "Mène l'enquête !",
             "coo" : {
                 lat: 43.61879740985583,
                 lng: 7.062127590179443
             },
             "image": "enigmas-pics/enigma-3.jpg",
-            "point" : 15,
+            "point" : 10,
             "contenu" : "A quel endroit correspond cette image ?"
         },
         {
             "id": 4,
-            "titre" : "La seconde enigme du sphinx",
+            "titre" : "La pause au Learning Centre !",
             "coo" : {
                 lat: 43.62497969832218,
                 lng: 7.073543071746826
             },
-            "image": "pics/sphinx.jpg",
-            "point" : 40,
+            "image": "enigmas-pics/enigma-4.jpg",
+            "point" : 20,
             "contenu" : "La première engendre la seconde et la seconde engendre la première."
+        },
+        {
+            "id": 5,
+            "titre" : "Seuls les vrais sauront me retrouver...",
+            "coo": {
+                lat: 43.62497969832218,
+                lng: 7.073543071746826
+            },
+            "image": "enigmas-pics/enigma-5.jpg",
+            "point": 40,
+            "contenu" : "A quel endroit correspond cette image ?"
         }
     ], function(err, result) {
         assert.equal(err, null);
-        assert.equal(4, result.result.n);
-        assert.equal(4, result.ops.length);
+        assert.equal(result.result.n, result.ops.length);
         console.log("Inserted " + result.result.n+ " enigmas into the collection");
     });
 };
