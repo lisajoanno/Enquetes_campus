@@ -26,6 +26,23 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
     return mySocket;
   })
 
+  .factory('Camera', function($q) {
+
+    return {
+      getPicture: function(options) {
+        var q = $q.defer();
+
+        navigator.camera.getPicture(function(result) {
+          q.resolve(result);
+        }, function(err) {
+          q.reject(err);
+        }, options);
+
+        return q.promise;
+      }
+    }
+
+  })
 
   .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {

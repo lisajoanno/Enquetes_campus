@@ -10,6 +10,7 @@ var chat = require('./routes/chat');
 var accessEnigmas = require('./routes/accessEnigmas');
 var gameMaster = require('./routes/validationGameMaster');
 var team = require('./routes/team');
+var uploadImg = require('./routes/uploadImage');
 
 var express = require('express'),
     app = express(),
@@ -44,10 +45,19 @@ app.use(express.static(__dirname + '/public'));
  * Enricher of the request : all origins are accepted.
  */
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-  next();
+    var responseSettings = {
+        "AccessControlAllowOrigin": req.headers.origin,
+        "AccessControlAllowHeaders": "Content-Type,X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5,  Date, X-Api-Version, X-File-Name",
+        "AccessControlAllowMethods": "POST, GET, PUT, DELETE, OPTIONS",
+        "AccessControlAllowCredentials": true
+    };
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Credentials", responseSettings.AccessControlAllowCredentials);
+
+    next();
 });
 
 
@@ -72,6 +82,7 @@ app.use('/chat', chat);
 app.use('/enigmas', accessEnigmas);
 app.use('/master', gameMaster);
 app.use('/team', team);
+app.use('/upload', uploadImg);
 
 
 /**

@@ -180,7 +180,7 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('EnigmeCtrl', function($scope, $stateParams, $http, $ionicPopup, socket, loginFactory) {
+.controller('EnigmeCtrl', function($scope, $stateParams, $http, $ionicPopup, socket, loginFactory, Camera) {
   $scope.selectedEnigme;
   $scope.answToSend = {
     "enigmaID": $stateParams.enigmeId,
@@ -200,10 +200,58 @@ angular.module('starter.controllers', [])
       if(enigmes[enigme].id == $stateParams.enigmeId)
         $scope.selectedEnigme = enigmes[enigme];
     }
-    console.log("selelcted::"+JSON.stringify($scope.selectedEnigme));
+    console.log("selected::"+JSON.stringify($scope.selectedEnigme));
   }, function errorCallback(response) {
     console.log("Couldn't get enigma.");
   });
+
+  $scope.getPicture = function (options) {
+
+    var options = {
+      quality : 75,
+      targetWidth: 200,
+      targetHeight: 200,
+      sourceType: 0
+    };
+
+    Camera.getPicture(options).then(function(imageData) {
+      $scope.picture = imageData;
+      uploadImage(imageData);
+    }, function(err) {
+      console.log(err);
+    });
+  };
+
+  $scope.takePicture = function (options) {
+
+    var options = {
+      quality : 75,
+      targetWidth: 200,
+      targetHeight: 200,
+      sourceType: 1
+    };
+
+    Camera.getPicture(options).then(function(imageData) {
+      $scope.picture = imageData;
+      uploadImage(imageData);
+    }, function(err) {
+      console.log(err);
+    });
+
+  };
+
+  $scope.uploadImage = function(files) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', $scope.serverAddress + 'upload');
+
+    var form = new FormData();
+    for(var i=0; i < files.length; i++)
+      form.append('file', files[i]);
+
+    xhr.send(form);
+
+  };
 
   $scope.sendAnswer = function (){
     //console.log(JSON.stringify($scope.loginData));

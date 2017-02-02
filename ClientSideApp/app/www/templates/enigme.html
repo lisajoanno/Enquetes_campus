@@ -17,13 +17,18 @@
             <input ng_model="answToSend.answer" type="text" placeholder="Votre réponse">
           </label>
           <br/>
+          <input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files)" multiple/>
+          <button class = "button" ng-click = "takePicture()">Prendre une photo</button>
+          <button class = "button" ng-click = "getPicture()">Choisir dans la galerie</button>
+          <img ng-src = "{{user.picture}}">
+          <button class="button button-stable col col-50 col-offset-25" ng-click="uploadPicture()">
+            Envoyer l'image
+          </button>
           <button class="button button-stable col col-50 col-offset-25" ng-click="sendAnswer()">
             Envoyer
           </button>
         </div>
       </div>
     </div>
-
-
   </ion-content>
 </ion-view>
