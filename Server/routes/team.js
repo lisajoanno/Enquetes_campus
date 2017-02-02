@@ -27,9 +27,8 @@ router.post('/', function(req, res) {
 
 
 router.get('/all', function (req,res, next) {
-    //console.log("salut");
     teamDB.getAllTeams(function (item) {
-        res.send(item);
+        res.render('listDisplay', {listName : "équipes", list: item});
     });
 });
 
