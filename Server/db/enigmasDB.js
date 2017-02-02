@@ -22,7 +22,7 @@ function insertDocuments() {
                 lat: 43.6210156491945,
                 lng: 7.066354751586914
             },
-            "image": "image.png",
+            "image": "enigmas-pics/enigma-1.jpg",
             "point" : 10,
             "contenu" : "A quel endroit correspond cette image ?"
         },
@@ -33,7 +33,7 @@ function insertDocuments() {
                 lat: 43.61910809278851,
                 lng: 7.0741868019104
             },
-            "image": "sphinx.png",
+            "image": "pics/sphinx.jpg",
             "point" : 20,
             "contenu" : "Qu'est ce qui le matin marche à quatre pattes, le midi à deux et le soir à trois ?"
         },
@@ -44,7 +44,7 @@ function insertDocuments() {
                 lat: 43.61879740985583,
                 lng: 7.062127590179443
             },
-            "image": "image2.png",
+            "image": "enigmas-pics/enigma-3.jpg",
             "point" : 15,
             "contenu" : "A quel endroit correspond cette image ?"
         },
@@ -55,7 +55,7 @@ function insertDocuments() {
                 lat: 43.62497969832218,
                 lng: 7.073543071746826
             },
-            "image": "sphinx.png",
+            "image": "pics/sphinx.jpg",
             "point" : 40,
             "contenu" : "La première engendre la seconde et la seconde engendre la première."
         }

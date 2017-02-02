@@ -67,7 +67,7 @@ app.use(function(err, req, res, next) {
 
 
 app.use('/', index);
-app.use('/access', accessEnigmas);
+app.use('/enigmas', accessEnigmas);
 app.use('/master', gameMaster);
 app.use('/team', team);
 
