@@ -55,6 +55,7 @@ var getAValidation = function(callback) {
             if (item.teamID !== "")
                 callback(item);
         }
+        callback(null);
     });
 };
 
