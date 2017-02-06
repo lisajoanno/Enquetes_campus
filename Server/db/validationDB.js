@@ -52,7 +52,7 @@ var getAValidation = function(callback) {
         console.log(item == null);
         console.log(item);
         if (item != null) {
-            if (item.teamID != null )
+            if (item.teamID !== "")
                 callback(item);
         }
     });
