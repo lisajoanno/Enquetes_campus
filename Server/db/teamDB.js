@@ -28,9 +28,8 @@ exports.addATeam = function (teamName, callback) {
             "resolved": "",
             "score": 0
         }
-    ], function(err,docsInserted){
-        console.log(docsInserted);
-        callback(docsInserted._id);
+    ], function(err,docsInserted) {
+        callback(docsInserted.ops[0]._id);
     });
 
 };
