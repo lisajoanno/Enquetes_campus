@@ -210,7 +210,7 @@ angular.module('starter.controllers', [])
     var form = new FormData();
     for (var i = 0; i < files.length; i++) {
       form.append('file', files[i]);
-      $scope.answToSend.answer = "IMG" + files[i].name;
+      $scope.answToSend.answer = "IMG-" + files[i].name;
     }
     xhr.send(form);
   };
