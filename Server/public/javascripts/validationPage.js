@@ -24,6 +24,7 @@ var isNotValid = function () {
     xhr.open("POST", url + "/master/isNotValid", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     var json = {idAnswer : idBD};
+    console.log("je set NON valide : " + idBD);
     xhr.send(JSON.stringify(json));
 
     var showEnigma = document.getElementById("myEnigma");

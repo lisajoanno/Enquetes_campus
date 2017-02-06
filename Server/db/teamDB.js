@@ -69,4 +69,5 @@ exports.teamResolvedAnEnigma = function (idTeam, idEnigma, score, callback) {
                 }
             );
         });
+    callback();
 };

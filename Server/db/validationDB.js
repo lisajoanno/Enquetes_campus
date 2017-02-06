@@ -85,6 +85,7 @@ exports.setValid = function (id, callback) {
         {'_id': mongodb.ObjectID(id) },
         { $set: { "result" : "ok" }}
     );
+
     collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
         assert.equal(err, null);
 
@@ -102,6 +103,7 @@ exports.setValid = function (id, callback) {
 
 
 exports.setNotValid = function (id, callback) {
+    console.log("je set non valide : " + id);
     var db = mongo.getDatabase();
     var collection = db.collection(collectionName);
     collection.updateOne(
@@ -130,17 +132,17 @@ exports.setSockets = function(listSocket) {
  */
 var sendToClient = function(id, toSend, callback) {
     var socketId;
-    // ICI faire socket avec l'ID de la socket en BD pour l'_id
-    // MongoClient.connect(url, function(err, db) {
-        // Get the documents collection
-        var collection = db.collection(collectionName);
-        collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
-            assert.equal(err, null);
-            if (clients[docs[0].socketId] != null) {
-                clients[docs[0].socketId].emit('isvalidated', toSend);
-            }
-            callback();
-        });
+    var db = mongo.getDatabase();
+    var collection = db.collection(collectionName);
+    collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
+        assert.equal(err, null);
+        if (clients[docs[0].socketId] != null) {
+            console.log("je send au client " + docs[0].socketId);
+
+            clients[docs[0].socketId].emit('isvalidated', toSend);
+        }
+        callback();
+    });
     // });
 };
 
