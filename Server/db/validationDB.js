@@ -48,7 +48,7 @@ var getAValidation = function(callback) {
     // Find some documents
     collection.findOne({"result":""}, function(err, item) {
         assert.equal(err, null);
-        if (item._id != null) {
+        if (item.teamID != null) {
             callback(item);
         }
     });
