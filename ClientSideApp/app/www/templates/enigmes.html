@@ -6,11 +6,17 @@
         <div class="item item-divider">
           {{enigme.titre}}
         </div>
-        <div class="item item-text-wrap">
-          <a ng-show="enigme.isAvailable" href="#/app/enigme/{{enigme.id}}"> Cliquez pour gagner {{enigme.point}} points! </a>
-          <div ng-show="!enigme.isAvailable">
-            Vous n'êtes pas dans la bonne zone pour ouvrir cette énigme!
-          </div>
+          <div class="item item-text-wrap">
+            <a ng-show="enigme.isAvailable" href="#/app/enigme/{{enigme.id}}"> Cliquez pour gagner {{enigme.point}} points! </a>
+            <div ng-show="!enigme.isAvailable && enigme.id==currentEnigme.id">
+              Vous n'êtes pas dans la bonne zone pour ouvrir cette énigme! Cet énigme n'est accessible que dans la zone verte.
+            </div>
+            <div ng-show="enigme.id < currentEnigmeId">
+              Vous avez déjà résolu cette énigme!
+            </div>
+            <div ng-show="enigme.id > currentEnigmeId">
+              Vous devez résoudre l'énigme {{currentEnigme.titre}} avant!
+            </div>
         </div>
       </div>
     </div>

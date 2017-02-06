@@ -3,9 +3,9 @@ angular.module('starter.controllers', [])
 .controller('AppCtrl', function($scope, $http, loginFactory, $ionicPopup, positionFactory) {
   $scope.serverAddress = 'https://web-map-project-si5.herokuapp.com/';
 
-  $scope.currentEnigme = 4;
+  $scope.currentEnigmeId = 1;
   $scope.isInScopeForCurrent = false;
-  $scope.groupe_name = {"value":"Groupe Des Cerises"};
+  $scope.groupe_name = {"value":""};
 
   // Open the login modal
   $scope.login = function() {
@@ -102,7 +102,6 @@ angular.module('starter.controllers', [])
 
 
 .controller('EnigmesCtrl', function($scope, $stateParams, $http, $ionicPopup) {
-
   $scope.position = {x : 0, y : 0};
   $scope.setPosition = function (givenPosition){
     $scope.position.x = givenPosition.coords.latitude;
@@ -118,10 +117,9 @@ angular.module('starter.controllers', [])
         var a = $scope.enigmes[enigme].coo;
         var b = $scope.position;
         var distance =  $scope.getDistanceFromLatLonInKm(a.lat,a.lng,b.x,b.y);
-        console.log("in scope : "+$scope.isInScopeForCurrent);
-        //console.log("La distance entre l'énigme et l'user est de " + distance + " km");
+       // console.log("Enigme parcouru ("+ $scope.enigmes[enigme].id+") :"+  JSON.stringify($scope.enigmes[enigme].coo));
         if (distance<=0.150 && !$scope.isInScopeForCurrent) {   //Si on arrive dans une zone d'énigme
-          if ($scope.enigmes[enigme].id == $scope.currentEnigme) { //Si on arrive dans la portée de la bonne enigme
+          if ($scope.enigmes[enigme].id == $scope.currentEnigmeId) { //Si on arrive dans la portée de la bonne enigme
              $scope.enigmes[enigme].isAvailable = true;
             var alertGoodPopup = $ionicPopup.alert({
               title: 'Zone d\'énigme',
@@ -136,12 +134,12 @@ angular.module('starter.controllers', [])
               okText: 'Continuer'
             });
           }
-        } else if  (distance <= 0.150 && $scope.isInScopeForCurrent && $scope.enigmes[enigme].id == $scope.currentEnigme )
+        } else if  (distance <= 0.150 && $scope.isInScopeForCurrent && $scope.enigmes[enigme].id == $scope.currentEnigmeId )
           //Si on était déjà dans la zone pour l'énigme courrante
              $scope.enigmes[enigme].isAvailable = true;
         else {  //Si on est pas dans une zone énigme
           $scope.enigmes[enigme].isAvailable = false;
-          if ($scope.enigmes[enigme].id == $scope.currentEnigme) //si on sort de la zone énigme pour l'énigme courrante
+          if ($scope.enigmes[enigme].id == $scope.currentEnigmeId) //si on sort de la zone énigme pour l'énigme courrante
             $scope.isInScopeForCurrent = false;
         }
       }
@@ -200,7 +198,6 @@ angular.module('starter.controllers', [])
       if(enigmes[enigme].id == $stateParams.enigmeId)
         $scope.selectedEnigme = enigmes[enigme];
     }
-    console.log("selected::"+JSON.stringify($scope.selectedEnigme));
   }, function errorCallback(response) {
     console.log("Couldn't get enigma.");
   });
@@ -219,14 +216,16 @@ angular.module('starter.controllers', [])
   };
 
   $scope.sendAnswer = function (){
-    //console.log(JSON.stringify($scope.loginData));
-    console.log(JSON.stringify($scope.answToSend));
-    socket.emit("addvalidation",  $scope.answToSend);
+    if (loginFactory.get().groupe_id!='' && loginFactory.get().groupe_id!='undefined') {
+      socket.emit("addvalidation", $scope.answToSend);
+      console.log('team id : '+ loginFactory.get().groupe_id);
+    }
+    else
+      alert('Veuillez vous connecter d\'abord');
   };
 
   //Envoyé lorsque la réponse a bien été reçue par le serveur
   socket.on('sentvalidation',function(data){
-    console.log("in sent validation");
     var alertFailPopup = $ionicPopup.alert({
       title: 'Réponse envoyée',
       template: 'Un administrateur va vérifier votre réponse.',
@@ -236,17 +235,17 @@ angular.module('starter.controllers', [])
 
   //Envoyé lorsqu'un administrateur a vérifié la réponse
   socket.on('isvalidated',function(isCorrect){
-    if (isCorrect === 'OK'){
+    if (isCorrect === 'ok'){
       document.getElementById("answer-input").className += " true-cadre";
       var alertGoodPopup = $ionicPopup.alert({
         title: 'Réponse corrigée',
         template: 'Votre réponse a été validée par un administrateur! Vous pouvez passer à l\'énigme suivante!',
         okText: 'Continuer'
       });
-      $scope.currentEnigme++;
+      $scope.currentEnigmeId++;
       $scope.isInScopeForCurrent = false;
     }
-    else if (isCorrect === 'NOK'){
+    else if (isCorrect === 'nok'){
       document.getElementById("answer-input").className += " false-cadre";
       var alertBadPopup = $ionicPopup.alert({
         title: 'Réponse corrigée',

@@ -118,7 +118,7 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
 
   .factory('loginFactory', function() {
     var loginService = {};
-    var loginData = {'groupe_name' : 'Groupe Des Cerises', 'groupe_id' : ''};
+    var loginData = {'groupe_name' : '', 'groupe_id' : ''};
 
     loginService.setGroupeName = function(groupeName) {
       loginData.groupe_name = groupeName;
