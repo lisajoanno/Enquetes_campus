@@ -103,7 +103,6 @@ exports.setValid = function (id, callback) {
 
 
 exports.setNotValid = function (id, callback) {
-    console.log("je set non valide : " + id);
     var db = mongo.getDatabase();
     var collection = db.collection(collectionName);
     collection.updateOne(
@@ -137,8 +136,6 @@ var sendToClient = function(id, toSend, callback) {
     collection.find({'_id': mongodb.ObjectID(id) }).toArray(function(err, docs) {
         assert.equal(err, null);
         if (clients[docs[0].socketId] != null) {
-            console.log("je send au client " + docs[0].socketId);
-
             clients[docs[0].socketId].emit('isvalidated', toSend);
         }
         callback();
