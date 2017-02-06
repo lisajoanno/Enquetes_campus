@@ -22,25 +22,19 @@ exports.addATeam = function (teamName, callback) {
     var db = mongo.getDatabase();
     var collection = db.collection(collectionName);
     // Insert some documents
-    insertTeam(collection, teamName, function () {
-        collection.findOne({"teamName":teamName}, function(err, item) {
-            assert.equal(err, null);
-            callback(item._id);
-        });
-    });
-};
-
-
-function insertTeam(collection, teamName, callback) {
-    collection.insertMany([
+    collection.insert([
         {
             "teamName": teamName,
             "resolved": "",
             "score": 0
         }
-    ],
-    callback());
-}
+    ], function(err,docsInserted){
+        console.log(docsInserted);
+        callback(docsInserted._id);
+    });
+
+};
+
 
 
 /**
