@@ -48,7 +48,9 @@ var getAValidation = function(callback) {
     // Find some documents
     collection.findOne({"result":""}, function(err, item) {
         assert.equal(err, null);
-        callback(item);
+        if (item._id != null) {
+            callback(item);
+        }
     });
 };
 
@@ -140,7 +142,6 @@ var sendToClient = function(id, toSend, callback) {
         }
         callback();
     });
-    // });
 };
 
 
