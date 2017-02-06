@@ -180,7 +180,7 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('EnigmeCtrl', function($scope, $stateParams, $http, $ionicPopup, socket, loginFactory, Camera) {
+.controller('EnigmeCtrl', function($scope, $stateParams, $http, $ionicPopup, socket, loginFactory) {
   $scope.selectedEnigme;
   $scope.answToSend = {
     "enigmaID": $stateParams.enigmeId,
@@ -205,52 +205,17 @@ angular.module('starter.controllers', [])
     console.log("Couldn't get enigma.");
   });
 
-  $scope.getPicture = function (options) {
-
-    var options = {
-      quality : 75,
-      targetWidth: 200,
-      targetHeight: 200,
-      sourceType: 0
-    };
-
-    Camera.getPicture(options).then(function(imageData) {
-      $scope.picture = imageData;
-      uploadImage(imageData);
-    }, function(err) {
-      console.log(err);
-    });
-  };
-
-  $scope.takePicture = function (options) {
-
-    var options = {
-      quality : 75,
-      targetWidth: 200,
-      targetHeight: 200,
-      sourceType: 1
-    };
-
-    Camera.getPicture(options).then(function(imageData) {
-      $scope.picture = imageData;
-      uploadImage(imageData);
-    }, function(err) {
-      console.log(err);
-    });
-
-  };
-
   $scope.uploadImage = function(files) {
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', $scope.serverAddress + 'upload');
 
     var form = new FormData();
-    for(var i=0; i < files.length; i++)
+    for (var i = 0; i < files.length; i++) {
       form.append('file', files[i]);
-
+      $scope.answToSend.answer = "IMG" + files[i].name;
+    }
     xhr.send(form);
-
   };
 
   $scope.sendAnswer = function (){
