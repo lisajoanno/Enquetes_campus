@@ -60,8 +60,8 @@ exports.teamResolvedAnEnigma = function (idTeam, idEnigma, score, callback) {
     var collection = db.collection(collectionName);
     collection.find({'_id': mongodb.ObjectID(idTeam) })
         .toArray(function(err, docs) {
-            var nowResolved = docs[0].resolved + "," + idEnigma;
             assert.equal(err, null);
+            var nowResolved = docs[0].resolved + "," + idEnigma;
             collection.updateOne(
                 {'_id': mongodb.ObjectID(idTeam) },
                 { $set: { "resolved" : nowResolved },
