@@ -1,6 +1,7 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $http, loginFactory, $ionicPopup, positionFactory) {
+  //$scope.serverAddress = 'http://10.212.123.252:8888/';
   $scope.serverAddress = 'https://web-map-project-si5.herokuapp.com/';
 
   $scope.currentEnigmeId = 1;
@@ -210,7 +211,7 @@ angular.module('starter.controllers', [])
     var form = new FormData();
     for (var i = 0; i < files.length; i++) {
       form.append('file', files[i]);
-      $scope.answToSend.answer = "IMG-" + files[i].name;
+      $scope.answToSend.answer = "IMG" + files[i].name;
     }
     xhr.send(form);
   };

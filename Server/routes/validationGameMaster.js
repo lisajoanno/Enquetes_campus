@@ -19,14 +19,15 @@ router.get('/', function(req, res, next) {
             res.render('gameMaster', { title: 'Pas de nouvelle réponse proposée'});
         } else {
             if (result.answer.includes("IMG")) {// this answer is an image
-                var array = result.answer.split('-');
+                var substr = result.answer.substring(3, result.answer.length);
                 res.render('gameMaster', {
                     title: 'Nouvelle réponse proposée',
                     result: result.result,
                     id: result._id,
                     team: result.teamID,
                     enigma: result.enigmaID,
-                    answer: '/uploads/'+array[0]
+                    answer: '',
+                    imgsrc: '/uploads/'+substr
                 });
             } else {
                 res.render('gameMaster', {

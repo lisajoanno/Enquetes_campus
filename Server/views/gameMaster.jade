@@ -10,6 +10,7 @@ block content
         p De la team : #{team}
         p Pour l'enigme : #{enigma}
         p Réponse proposée : #{answer}
+        img(src='#{imgsrc}')
         div(id="idAnswer" myId='#{id}')
         input(type='button', value='Valider', onclick='isValid()', class='btn btn-success btn-lg')
         input(type='button', value='Refuser', onclick='isNotValid()', class='btn btn-danger btn-lg')
