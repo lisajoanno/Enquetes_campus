@@ -48,9 +48,6 @@ var getAValidation = function(callback) {
     // Find some documents
     collection.findOne({"result":""}, function(err, item) {
         assert.equal(err, null);
-        //assert.not.null(item);
-        console.log(item == null);
-        console.log(item);
         if (item != null) {
             if (item.teamID !== "")
                 callback(item);

@@ -134,3 +134,25 @@ exports.getScoreForAEnigma = function(idEnigma, callback) {
         });
 };
 
+exports.getNewId = function(callback) {
+    var db = mongo.getDatabase();
+    var collection = db.collection(collectionName);
+    var newID = 0;
+    collection.find({}).sort({id:-1}).limit(1).toArray(function (err, items) {
+        var item = items[0];
+        newID = item.id + 1;
+        callback(newID);
+    });
+};
+
+exports.addNewEnigma = function(enigmaToAdd, callback) {
+    var db = mongo.getDatabase();
+    var collection = db.collection(collectionName);
+    // Insert some documents
+    collection.insertMany([
+        enigmaToAdd
+    ],
+        callback() //TODO peut etre des problemes ici?
+    );
+
+};
