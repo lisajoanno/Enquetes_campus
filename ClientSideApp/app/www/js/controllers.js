@@ -75,8 +75,13 @@ angular.module('starter.controllers', [])
         var currentEnigma = currentEnigmaFactory.get();
         var alreadyDisplayedPositions = [];
         for (var enigme in enigmes) {
-          console.log(alreadyDisplayedPositions.indexOf(enigmes[enigme].coo));
-          if (enigmes[enigme].id === currentEnigma.id && alreadyDisplayedPositions.indexOf(enigmes[enigme].coo) === -1)
+          var isAlreadyDisplayed = false;
+          for (var i = 0 ; i<alreadyDisplayedPositions.length ; i++ ){
+            if(alreadyDisplayedPositions[i].lat === enigmes[enigme].coo.lat && alreadyDisplayedPositions[i].lng === enigmes[enigme].coo.lng) {
+              isAlreadyDisplayed = true;
+            }
+          }
+          if (enigmes[enigme].id === currentEnigma.id && !isAlreadyDisplayed)
           {
             var roiCircle = new google.maps.Circle({
               strokeColor: '#079819',
@@ -90,7 +95,7 @@ angular.module('starter.controllers', [])
             });
             alreadyDisplayedPositions.push(enigmes[enigme].coo);
           }
-          else if (alreadyDisplayedPositions.indexOf(enigmes[enigme].coo) === -1)
+          else if (!isAlreadyDisplayed)
           {
             var roiCircle = new google.maps.Circle({
               strokeColor: '#FF0000',
