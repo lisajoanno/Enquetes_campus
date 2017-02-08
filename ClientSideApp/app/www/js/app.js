@@ -70,49 +70,24 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
     });
   })
 
-  .factory('positionFactory', function($cordovaGeolocation) {
-    var posService = {};
-    var position = {x : 0, y : 0};
+  .factory('currentEnigmaFactory', function() {
+    var currentEnigmaService = {};
+    var currentEnigma = {};
+    var isSet = false;
 
-    posService.beginWatch = function() {
-      var posOptions = {timeout: 10000, enableHighAccuracy: false};
-      $cordovaGeolocation
-        .getCurrentPosition(posOptions)
+    currentEnigmaService.set = function(enigma){
+      currentEnigma = enigma;
+      isSet = true;
+    }
 
-        .then(function (position) {
-          var lat  = position.coords.latitude;
-          var long = position.coords.longitude;
-          console.log('position avec cordova plugin'+lat + '-' + long);
-          position.x = lat;
-          position.y = long;
-        }, function(err) {
-          console.log(err)
-        });
+    currentEnigmaService.isSet = function () {
+      return isSet;
+    }
 
-      var watchOptions = {timeout : 3000, enableHighAccuracy: false};
-      var watch = $cordovaGeolocation.watchPosition(watchOptions);
-
-      watch.then(
-        null,
-        function(err) {
-          console.log(err)
-        },
-        function(position) {
-          var lat  = position.coords.latitude;
-          var long = position.coords.longitude;
-          console.log('position avec cordova plugin'+lat + '-' + long);
-          position.x = lat;
-          position.y = long;
-        }
-      );
-      watch.clearWatch();
+    currentEnigmaService.get = function() {
+      return currentEnigma;
     };
-
-    posService.get = function() {
-      console.log("someone is using position "+ JSON.stringify(position));
-      return position;
-    };
-    return posService;
+    return currentEnigmaService;
   })
 
 
@@ -132,6 +107,53 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
       return loginData;
     };
     return loginService;
+  })
+
+  .factory('posFactory', function() {
+    var posService = {};
+    var position = {x : 0, y : 0};
+
+    var setPosition = function (givenPosition) {
+      position.x = givenPosition.coords.latitude;
+      position.y = givenPosition.coords.longitude;
+    };
+
+    var showError = function (error){
+      console.log("Error - Couldn't find position - "+ error);
+    };
+
+    posService.start = function(groupeName) {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(setPosition,showError);
+      } else{
+        console.log("Geolocation is not supported by this browser.");
+      }
+    };
+
+    posService.getPos = function(groupeId) {
+      console.log(JSON.stringify(position));
+      return position;
+    };
+
+    var deg2rad = function(deg) {
+      return deg * (Math.PI/180)
+    };
+
+    posService.getDistanceFromLatLonInKm = function(lat1,lon1,lat2,lon2) {
+      var R = 6371; // Radius of the earth in km
+      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var dLon = deg2rad(lon2-lon1);
+      var a =
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+          Math.sin(dLon/2) * Math.sin(dLon/2)
+        ;
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      var d = R * c; // Distance in km
+      return d;
+    };
+
+    return posService;
   })
 
 .config(function($stateProvider, $urlRouterProvider) {

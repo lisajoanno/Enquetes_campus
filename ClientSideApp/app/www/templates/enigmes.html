@@ -8,14 +8,14 @@
         </div>
           <div class="item item-text-wrap">
             <a ng-show="enigme.isAvailable" href="#/app/enigme/{{enigme.id}}"> Cliquez pour gagner {{enigme.point}} points! </a>
-            <div ng-show="!enigme.isAvailable && enigme.id==currentEnigme.id">
+            <div ng-show="!enigme.isAvailable && enigme.id==currentEnigma.id">
               Vous n'êtes pas dans la bonne zone pour ouvrir cette énigme! Cet énigme n'est accessible que dans la zone verte.
             </div>
-            <div ng-show="enigme.id < currentEnigmeId">
+            <div ng-show="enigme.id < currentEnigma.id">
               Vous avez déjà résolu cette énigme!
             </div>
-            <div ng-show="enigme.id > currentEnigmeId">
-              Vous devez résoudre l'énigme {{currentEnigme.titre}} avant!
+            <div ng-show="enigme.id > currentEnigma.id">
+              Vous devez résoudre l'énigme {{currentEnigma.titre}} avant!
             </div>
         </div>
       </div>
