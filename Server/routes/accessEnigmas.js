@@ -18,7 +18,6 @@ router.get('/', function(req, res, next) {
 
 /* GET home page. */
 router.get('/new', function(req, res, next) {
-    console.log('là');
     res.render('addEnigma', {});
 });
 
@@ -36,14 +35,6 @@ PAS D'ID
 
  */
 router.post('/new', function(req, res) {
-    if (req.body.titre == ""
-        | req.body.coo == ""
-        | req.body.image == ""
-        | req.body.point == ""
-        | req.body.contenu == "") {
-        res.send("A problem occured while uploading your enigma");
-    }
-
     enigmasDB.getNewId(function (newID) {
         var enigmaToAdd = {};
         enigmaToAdd.id = newID;

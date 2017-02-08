@@ -19,6 +19,9 @@ var teamDB = require('./../db/teamDB');
  */
 router.post('/', function(req, res) {
     var teamName = req.body.teamName;
+    if (teamName == undefined || teamName == null /*|| teamName  == ""*/) {
+        res.statusCode = 422;
+    }
     //console.log("Nouvelle team : " + teamName);
     teamDB.addATeam(teamName, function (idTeamCreated) {
         res.send(idTeamCreated)

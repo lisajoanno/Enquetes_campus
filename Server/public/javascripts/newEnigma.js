@@ -1,6 +1,6 @@
 var xhr = new XMLHttpRequest;
 
-var url = 'http://10.212.118.204:8888';
+var url = 'https://web-map-project-si5.herokuapp.com';
 //var url = 'http://localhost:8888';
 
 var post = function () {
@@ -26,7 +26,7 @@ var post = function () {
         xhr.open("POST", url + "/enigmas/new", true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.send(JSON.stringify(enigma));
-        alert("Enigme envoyé");
+        alert("Enigme envoyée");
     };
 
     var error = function (error) {
