@@ -18,7 +18,27 @@ router.get('/', function(req, res, next) {
         if (result == null) {
             res.render('gameMaster', { title: 'Pas de nouvelle réponse proposée'});
         } else {
-            res.render('gameMaster', { title: 'Nouvelle réponse proposée', result : result.result, id : result._id , team : result.teamID, enigma: result.enigmaID, answer: result.answer});
+            if (result.answer.includes("IMG")) {// this answer is an image
+                var substr = result.answer.substring(3, result.answer.length);
+                res.render('gameMaster', {
+                    title: 'Nouvelle réponse proposée',
+                    result: result.result,
+                    id: result._id,
+                    team: result.teamID,
+                    enigma: result.enigmaID,
+                    answer: '',
+                    imgsrc: '/uploads/'+substr
+                });
+            } else {
+                res.render('gameMaster', {
+                    title: 'Nouvelle réponse proposée',
+                    result: result.result,
+                    id: result._id,
+                    team: result.teamID,
+                    enigma: result.enigmaID,
+                    answer: result.answer
+                });
+            }
         }
     });
 });

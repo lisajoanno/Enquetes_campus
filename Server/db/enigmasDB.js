@@ -41,8 +41,8 @@ function insertDocuments() {
             "id": 3,
             "titre" : "Mène l'enquête !",
             "coo" : {
-                lat: 43.61879740985583,
-                lng: 7.062127590179443
+                lat: 43.614893,
+                lng: 7.07158
             },
             "image": "enigmas-pics/enigma-3.jpg",
             "point" : 10,
@@ -52,8 +52,8 @@ function insertDocuments() {
             "id": 4,
             "titre" : "La pause au Learning Centre !",
             "coo" : {
-                lat: 43.62497969832218,
-                lng: 7.073543071746826
+                lat: 43.614893,
+                lng: 7.07158
             },
             "image": "enigmas-pics/enigma-4.jpg",
             "point" : 20,
@@ -63,8 +63,8 @@ function insertDocuments() {
             "id": 5,
             "titre" : "Seuls les vrais sauront me retrouver...",
             "coo": {
-                lat: 43.62497969832218,
-                lng: 7.073543071746826
+                lat: 43.614893,
+                lng: 7.07158
             },
             "image": "enigmas-pics/enigma-5.jpg",
             "point": 40,
