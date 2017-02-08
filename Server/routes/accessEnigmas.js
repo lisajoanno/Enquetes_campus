@@ -16,4 +16,10 @@ router.get('/', function(req, res, next) {
     });
 });
 
+/* GET home page. */
+router.get('/new', function(req, res, next) {
+    console.log('là');
+    res.render('addEnigma', {});
+});
+
 module.exports = router;

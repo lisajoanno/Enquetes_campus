@@ -73,8 +73,10 @@ angular.module('starter.controllers', [])
           currentEnigmaFactory.set(enigmes[0]);
         }
         var currentEnigma = currentEnigmaFactory.get();
+        var alreadyDisplayedPositions = [];
         for (var enigme in enigmes) {
-          if (enigmes[enigme].id == currentEnigma.id)
+          console.log(alreadyDisplayedPositions.indexOf(enigmes[enigme].coo));
+          if (enigmes[enigme].id === currentEnigma.id && alreadyDisplayedPositions.indexOf(enigmes[enigme].coo) === -1)
           {
             var roiCircle = new google.maps.Circle({
               strokeColor: '#079819',
@@ -86,8 +88,9 @@ angular.module('starter.controllers', [])
               center: enigmes[enigme].coo,
               radius: 150
             });
+            alreadyDisplayedPositions.push(enigmes[enigme].coo);
           }
-          else
+          else if (alreadyDisplayedPositions.indexOf(enigmes[enigme].coo) === -1)
           {
             var roiCircle = new google.maps.Circle({
               strokeColor: '#FF0000',
@@ -99,6 +102,7 @@ angular.module('starter.controllers', [])
               center: enigmes[enigme].coo,
               radius: 150
             });
+            alreadyDisplayedPositions.push(enigmes[enigme].coo);
           }
         }
       }, function errorCallback(response) {

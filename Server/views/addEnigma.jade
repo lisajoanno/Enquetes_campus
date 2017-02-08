@@ -1,0 +1,17 @@
+//titre, coo, image point contenu à envoyer à /enigmas/new
+extends layout
+
+block content
+    script(src="/javascripts/newEnigma.js")
+    h1 Entrez une nouvelle énigme
+    form
+        fieldset
+            label Titre
+            input(id='titre',type='text',value='',placeholder='Votre titre')
+        fieldset
+            label Contenu
+            input(id='contenu',type='text',value='',placeholder='Contenu')
+        fieldset
+            label Nombre de points
+            input(id='points',type='text',value='',placeholder='20')
+        input(type="button" onclick="post();" value="Envoyer")
