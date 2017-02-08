@@ -20,7 +20,7 @@ var post = function () {
         enigma.titre = document.getElementById("titre").value;
         enigma.coo.lat = position.coords.latitude;
         enigma.coo.lng = position.coords.longitude;
-        enigma.point = document.getElementById("points").value;
+        enigma.point = parseInt(document.getElementById("points").value);
         enigma.contenu = document.getElementById("contenu").value;
         console.log(JSON.stringify(enigma));
         xhr.open("POST", url + "/enigmas/new", true);
