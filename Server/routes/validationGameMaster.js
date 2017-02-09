@@ -16,9 +16,13 @@ var validationDB = require('./../db/validationDB');
 router.get('/', function(req, res, next) {
     validationDB.getLastValidation(function (result) {
         if (result == null) {
-            res.render('gameMaster', { title: 'Pas de nouvelle réponse proposée'});
+            res.render('gameMaster', { title: 'Pas de nouvelle réponse proposée',
+                imgsrc: ''});
+
         } else {
+            console.log(result.answer);
             if (result.answer.includes("IMG")) {// this answer is an image
+                console.log("image");
                 var substr = result.answer.substring(3, result.answer.length);
                 res.render('gameMaster', {
                     title: 'Nouvelle réponse proposée',
@@ -30,13 +34,15 @@ router.get('/', function(req, res, next) {
                     imgsrc: '/uploads/'+substr
                 });
             } else {
+                console.log("pas image");
                 res.render('gameMaster', {
                     title: 'Nouvelle réponse proposée',
                     result: result.result,
                     id: result._id,
                     team: result.teamID,
                     enigma: result.enigmaID,
-                    answer: result.answer
+                    answer: result.answer,
+                    imgsrc: '/'
                 });
             }
         }
