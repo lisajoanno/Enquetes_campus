@@ -43,11 +43,16 @@ angular.module('starter.controllers', [])
       zoom: 15
     };
     var map = new google.maps.Map(document.getElementById("map"), optionsGmaps);
-
+    var marker;
+    var circles = [];
     $scope.$on('$ionicView.enter', function() {
+      //remove old circles
+      for (var i = 0 ; i<circles.length ; i++ ){
+        circles[i].setMap(null);
+      }
+
       //Affichage de la position
       $scope.position = posFactory.getPos();
-      var marker;
       var latlng = new google.maps.LatLng($scope.position.x, $scope.position.y);
 
       // Ajout d'un pointeur
@@ -93,6 +98,7 @@ angular.module('starter.controllers', [])
               center: enigmes[enigme].coo,
               radius: 150
             });
+            circles.push(roiCircle);
             alreadyDisplayedPositions.push(enigmes[enigme].coo);
           }
           else if (!isAlreadyDisplayed)
@@ -107,6 +113,7 @@ angular.module('starter.controllers', [])
               center: enigmes[enigme].coo,
               radius: 150
             });
+            circles.push(roiCircle);
             alreadyDisplayedPositions.push(enigmes[enigme].coo);
           }
         }
@@ -131,8 +138,7 @@ angular.module('starter.controllers', [])
         if(!currentEnigmaFactory.isSet()) {
           currentEnigmaFactory.set($scope.enigmes[0]);
         }
-        $scope.currentEnigma = $scope.enigmes[0];
-        console.log('In get enigmes - Enigme courrante : '+JSON.stringify($scope.currentEnigma));
+        $scope.currentEnigma = currentEnigmaFactory.get();
         for (var enigme in $scope.enigmes) {
           var a = $scope.enigmes[enigme].coo;
           var b = $scope.position;
