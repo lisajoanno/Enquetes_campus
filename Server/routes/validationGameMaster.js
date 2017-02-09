@@ -39,7 +39,7 @@ router.get('/', function(req, res, next) {
                     team: result.teamID,
                     enigma: result.enigmaID,
                     answer: result.answer,
-                    imgsrc: '/'
+                    imgsrc: ''
                 });
             }
         }
