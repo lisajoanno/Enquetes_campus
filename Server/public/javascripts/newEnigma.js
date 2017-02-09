@@ -23,7 +23,7 @@ var post = function () {
     enigma.coo.lng = document.getElementById("lng").value;
     enigma.point = parseInt(document.getElementById("points").value);
     enigma.contenu = document.getElementById("contenu").value;
-    enigma.image = 'uploads/' + currentImageName;
+    enigma.image = currentImageName;
     xhr.open("POST", url + "/enigmas/new", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(enigma));
