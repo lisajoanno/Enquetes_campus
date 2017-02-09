@@ -19,13 +19,14 @@ var teamDB = require('./../db/teamDB');
  */
 router.post('/', function(req, res) {
     var teamName = req.body.teamName;
-    if (teamName == undefined || teamName == null /*|| teamName  == ""*/) {
+    if (teamName == undefined || teamName == null || teamName == "") {
+        console.log("Probleme avec le teamName");
         res.statusCode = 422;
+    } else {
+        teamDB.addATeam(teamName, function (idTeamCreated) {
+            res.send(idTeamCreated)
+        });
     }
-    //console.log("Nouvelle team : " + teamName);
-    teamDB.addATeam(teamName, function (idTeamCreated) {
-        res.send(idTeamCreated)
-    });
 });
 
 
