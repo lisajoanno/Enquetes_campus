@@ -220,5 +220,5 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'btford.socket-io', 's
 
     ;
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/carte');
+    $urlRouterProvider.otherwise('/app/identification');
 });
