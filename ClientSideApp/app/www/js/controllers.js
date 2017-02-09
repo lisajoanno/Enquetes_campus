@@ -33,7 +33,12 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('CarteCtrl', function($scope, $http, posFactory, currentEnigmaFactory) {
+  .controller('CarteCtrl', function($scope, $http, posFactory, currentEnigmaFactory, $interval) {
+    //refresh the map every 10sec
+    $interval(function(){
+      $scope.refresh();
+    }, 10000);
+
     //Affichage de la carte (avec un position à Strasbourg par défaut)
     var centerpos = new google.maps.LatLng(48.579400,7.7519);
     var optionsGmaps = {
@@ -45,7 +50,12 @@ angular.module('starter.controllers', [])
     var map = new google.maps.Map(document.getElementById("map"), optionsGmaps);
     var marker;
     var circles = [];
+
     $scope.$on('$ionicView.enter', function() {
+      $scope.refresh();
+    });
+
+    $scope.refresh = function () {
       //remove old circles
       for (var i = 0 ; i<circles.length ; i++ ){
         circles[i].setMap(null);
@@ -120,11 +130,15 @@ angular.module('starter.controllers', [])
       }, function errorCallback(response) {
         console.log("Couldn't get enigma.");
       });
-    });
+    }
+
   })
 
 
-  .controller('EnigmesCtrl', function($scope, $stateParams, $http, $ionicPopup, posFactory, currentEnigmaFactory) {
+  .controller('EnigmesCtrl', function($scope, $stateParams, $http, $ionicPopup, posFactory, currentEnigmaFactory,  $interval ) {
+    $interval(function(){
+      $scope.refresh();
+    }, 10000);
 
     $scope.setPosition = function (){
       $scope.position = posFactory.getPos();
@@ -175,10 +189,14 @@ angular.module('starter.controllers', [])
     };
 
     $scope.$on('$ionicView.enter', function() {
+      $scope.refresh();
+    });
+
+    $scope.refresh = function () {
       $scope.position = {x : 0, y : 0};
       $scope.currentEnigma = currentEnigmaFactory.get();
       $scope.setPosition();
-    });
+    }
   })
 
 
