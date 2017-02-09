@@ -17,14 +17,14 @@ function insertDocuments() {
     collection.insertMany([
         {
             "id": 1,
-            "titre" : "L'énigme du sphinx",
+            "titre" : "La pause au Learning Centre !",
             "coo" : {
-                lat: 43.6210156491945,
-                lng: 7.066354751586914
+                lat: 43.614893,
+                lng: 7.07158
             },
-            "image": "sphinx.png",
-            "point" : 10,
-            "contenu" : "Qu'est ce qui le matin marche à quatre pattes, le midi à deux et le soir à trois ?"
+            "image": "enigma-4.jpg",
+            "point" : 20,
+            "contenu" : "A quel endroit correspond cette image ?"
         },
         {
             "id": 2,
@@ -50,14 +50,14 @@ function insertDocuments() {
         },
         {
             "id": 4,
-            "titre" : "La pause au Learning Centre !",
+            "titre" : "L'énigme du sphinx",
             "coo" : {
-                lat: 43.614893,
-                lng: 7.07158
+                lat: 43.6210156491945,
+                lng: 7.066354751586914
             },
-            "image": "enigma-4.jpg",
-            "point" : 20,
-            "contenu" : "La première engendre la seconde et la seconde engendre la première."
+            "image": "sphinx.png",
+            "point" : 10,
+            "contenu" : "Qu'est ce qui le matin marche à quatre pattes, le midi à deux et le soir à trois ?"
         },
         {
             "id": 5,
