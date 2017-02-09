@@ -16,6 +16,11 @@ block content
             label Nombre de points
             input(id='points',type='number',value='',placeholder='20',step="10")
         fieldset
+            label Image
+            div(id='droppableZone' ondragenter='dragEnterHandler(event)' ondrop='dropHandler(event)'
+            ondragover='dragOverHandler(event)' ondragleave='dragLeaveHandler(event)')
+                p Déposez ici votre image
+        fieldset
             label Coordonnées - Latitude
             input(id='lat',type='text',value='')
         fieldset
@@ -35,7 +40,7 @@ block content
                 //Map options.
                 var options = {
                     center: centerOfMap, //Set center.
-                    zoom: 7 //The zoom value.
+                    zoom: 15 //The zoom value.
                 };
 
                 //Create the map object.

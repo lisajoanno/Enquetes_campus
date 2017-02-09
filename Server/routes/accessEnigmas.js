@@ -43,6 +43,7 @@ router.post('/new', function(req, res) {
         enigmaToAdd.image = req.body.image;
         enigmaToAdd.point = req.body.point;
         enigmaToAdd.contenu = req.body.contenu;
+        console.log("je suis là");
         enigmasDB.addNewEnigma(enigmaToAdd, function (err) {
             if (err) res.send("A problem occured while uploading your enigma");
             else res.send("Your enigma was successfully registered.")
