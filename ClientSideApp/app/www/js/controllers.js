@@ -195,8 +195,12 @@ angular.module('starter.controllers', [])
     }).then(function successCallback(response) {
       var enigmes = response.data;
       for (var i= 0 ;  i<enigmes.length ; i++) {
-        if(enigmes[i].id == $stateParams.enigmeId)
+        if(enigmes[i].id == $stateParams.enigmeId) {
           $scope.selectedEnigme = enigmes[i];
+          var imgToShow = $scope.selectedEnigme.image;
+          console.log($scope.serverAddress+"uploads/"+imgToShow);
+          document.getElementById("enigma-img").setAttribute("src", $scope.serverAddress+"uploads/"+imgToShow);
+        }
         if(enigmes[i].id == currentEnigmaFactory.get().id) {
           nextEnigma = enigmes[i + 1];
         }
