@@ -29,7 +29,7 @@ PAS D'ID
  lat: 43.6210156491945,
  lng: 7.066354751586914
  },
- "image": "pics/sphinx.png",
+ "image": "sphinx.png",
  "point" : 10,
  "contenu" : "Qu'est ce qui le matin marche à quatre pattes, le midi à deux et le soir à trois ?"
 
@@ -43,7 +43,6 @@ router.post('/new', function(req, res) {
         enigmaToAdd.image = req.body.image;
         enigmaToAdd.point = req.body.point;
         enigmaToAdd.contenu = req.body.contenu;
-        console.log("je suis là");
         enigmasDB.addNewEnigma(enigmaToAdd, function (err) {
             if (err) res.send("A problem occured while uploading your enigma");
             else res.send("Your enigma was successfully registered.")
