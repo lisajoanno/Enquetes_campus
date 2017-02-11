@@ -14,11 +14,17 @@ Notre serveur est déployé sur Heroku (https://web-map-project-si5.herokuapp.co
 <li> Ajouter une énigme ; </li>
 <li> Chatter avec les joueurs, afin de pouvoir leur donner des indices si ils sont en difficulté. </li>
 </ul>
-<br />
 Notre client est codé avec la technologie ionic et est donc cross-platform. On peut le déployer sur un web-browser (si on ne souhaite pas le déployer sur son téléphonne) avec la commande `ionic serve`. Si on souhaite le déployer sur son téléphone, il suffit d'effectuer la commande suivante :
 <br />
 `ionic run android` pour un téléphonne sous Android. <br />
 Pour un téléphonne sous iOS, il faut créer un compte <i>Apple Developer</i>(cela est cependant payant et coûte $99 par an).
+<br /> <br/>
+Depuis l'application client, il est possible de :
+<ul>
+<li> voir la position des zones d'énigmes sur la carte ; </li>
+<li> résoudre une énigme (textuellement ou en envoyant une image) ; </li>
+<li> chatter avec les maîtres du jeu. </li>
+</ul>
 
 ## Points forts et points faibles
 ### Points forts
@@ -31,3 +37,6 @@ Pour un téléphonne sous iOS, il faut créer un compte <i>Apple Developer</i>(c
 <li> Un client cross-platform. </li>
 </ul>
 ### Points faibles
+<ul>
+<li> CSS basique côté serveur. </li>
+</ul>
