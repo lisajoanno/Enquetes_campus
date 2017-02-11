@@ -14,10 +14,10 @@ Notre serveur est déployé sur Heroku (https://web-map-project-si5.herokuapp.co
 <li> Ajouter une énigme ; </li>
 <li> Chatter avec les joueurs, afin de pouvoir leur donner des indices si ils sont en difficulté. </li>
 </ul>
-Notre client est codé avec la technologie ionic et est donc cross-platform. On peut le déployer sur un web-browser (si on ne souhaite pas le déployer sur son téléphonne) avec la commande `ionic serve`. Si on souhaite le déployer sur son téléphone, il suffit d'effectuer la commande suivante :
+Notre client est codé avec la technologie ionic et est donc cross-platform. On peut le déployer sur un web-browser (si on ne souhaite pas le déployer sur son téléphone) avec la commande `ionic serve`. Si on souhaite le déployer sur son téléphone, il suffit d'effectuer la commande suivante :
 <br />
-`ionic run android` pour un téléphonne sous Android. <br />
-Pour un téléphonne sous iOS, il faut créer un compte <i>Apple Developer</i>(cela est cependant payant et coûte $99 par an).
+`ionic run android` pour un téléphone sous Android. <br />
+Pour un téléphone sous iOS, il faut créer un compte <i>Apple Developer</i>(cela est cependant payant et coûte $99 par an).
 <br /> <br/>
 Depuis l'application client, il est possible de :
 <ul>
@@ -30,13 +30,13 @@ Depuis l'application client, il est possible de :
 ### Points forts
 <ul>
 <li> Ajout d'énigme avec image que le client peut voir. </li>
-<li> Localisation GPS du client en utilisant les capteurs du téléphonne. </li>
+<li> Localisation GPS du client en utilisant les capteurs du téléphone. </li>
 <li> Chat utilisant les web socket pour une communication en temps réel. </li>
-<li> Possibilité d'upload des images du téléphonne vers le serveur. </li>
+<li> Possibilité d'upload des images du téléphone vers le serveur. </li>
 <li> Un serveur web avec une interface responsive. </li>
 <li> Un client cross-platform. </li>
 </ul>
 ### Points faibles
 <ul>
-<li> Une équipe ne peut avoir qu'un téléphonne (pas de possibilité de s'authentifier dans une équipe). </li>
+<li> Une équipe ne peut avoir qu'un téléphone (pas de possibilité de s'authentifier dans une équipe). </li>
 </ul>
