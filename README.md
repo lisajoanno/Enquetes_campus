@@ -38,5 +38,5 @@ Depuis l'application client, il est possible de :
 </ul>
 ### Points faibles
 <ul>
-<li> CSS basique côté serveur. </li>
+<li> Une équipe ne peut avoir qu'un téléphonne (pas de possibilité de s'authentifier dans une équipe). </li>
 </ul>
