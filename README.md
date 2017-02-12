@@ -16,7 +16,7 @@ L’application mobile permet aussi de chatter librement avec les “maîtres du
 
 ### Serveur
 
-Notre serveur est déployé sur Heroku (https://web-map-project-si5.herokuapp.com/). Sur ce serveur, on a la possibilité de :
+Notre serveur est déployé sur Heroku (https://web-map-project-si5.herokuapp.com/). Celui-ci est lié à notre git. Sur ce serveur, on a la possibilité de :
 <ul>
 <li> Voir et valider les réponses des joueurs aux énigmes ; </li>
 <li> Voir la liste des équipes participantes ; </li>
@@ -48,11 +48,12 @@ Quelques tests ont été écrits avec Mocha. Pour lancer les tests, il suffit de
 
 Notre client est codé avec la technologie ionic et est donc cross-platform. On peut le déployer sur un web-browser (si on ne souhaite pas le déployer sur son téléphone) avec la commande `ionic serve`. Si on souhaite le déployer sur son téléphone, il suffit d'effectuer la commande suivante :
 <br />
-`ionic run android` pour un téléphone sous Android. <br />
+`ionic run android` pour un téléphone sous Android. Si aucun téléphone n'est connecté à l'appareil, l'application se lance sur un émulateur Android. <br />
 Pour un téléphone sous iOS, il faut créer un compte <i>Apple Developer</i>(cela est cependant payant et coûte $99 par an).
 <br /> <br/>
 Depuis l'application client, il est possible de :
 <ul>
+<li> déclarer son équipe ; </li>
 <li> voir la position des zones d'énigmes sur la carte ; </li>
 <li> résoudre une énigme (textuellement ou en envoyant une image) ; </li>
 <li> chatter avec les maîtres du jeu. </li>
@@ -63,7 +64,7 @@ Depuis l'application client, il est possible de :
 <ul>
 <li> Ajout d'énigme avec image que le client peut voir, avec la localisation intuitive sur une carte. </li>
 <li> Localisation GPS du client en utilisant les capteurs du téléphone. </li>
-<li> Chat utilisant les web socket pour une communication en temps réel. </li>
+<li> Chat utilisant les web sockets pour une communication en temps réel. </li>
 <li> Possibilité d'upload des images du téléphone vers le serveur. </li>
 <li> Un serveur web avec une interface responsive. </li>
 <li> Un client cross-platform. </li>
@@ -78,10 +79,10 @@ Depuis l'application client, il est possible de :
 ## Répartition du travail
 
 ### Arnaud (argarnie@polytech.unice.fr)
-Chat client/serveur via les sockets, upload & affichage des images côté client et côté serveur.
+Chat client web/serveur via les sockets, upload & affichage des images côté client et côté serveur.
 
 ### Chloé (chloe.guglielmi@etu.unice.fr)
-Client ionic : déplacement de l'utilisateur et affichage des énigmes sur la carte du client. Envoi des réponses et attente de la validation du maître du jeu.
+Client ionic : déplacement de l'utilisateur et affichage des énigmes sur la carte du client. Envoi des réponses et attente de la validation du maître du jeu. Chat client ionic.
 
 ### Lisa (lisa.joanno@etu.unice.fr)
 Serveur NodeJS : gestion des teams et énigmes en REST, validation des clients via les sockets. Déploiement de la base de données sur mLab et du serveur sur Heroku. Tests.
