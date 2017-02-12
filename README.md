@@ -46,7 +46,12 @@ Quelques tests ont été écrits avec Mocha. Pour lancer les tests, il suffit de
 
 ### Client
 
-Notre client est codé avec la technologie ionic et est donc cross-platform. On peut le déployer sur un web-browser (si on ne souhaite pas le déployer sur son téléphone) avec la commande `ionic serve`. Si on souhaite le déployer sur son téléphone, il suffit d'effectuer la commande suivante :
+Notre client est codé avec la technologie Ionic et est donc cross-platform. Pour installer les paquets nécessaires à son fonctionnement, vous devez entrer les commandes suivantes :
+
+    cd  ClientSideApp/app/
+    npm install
+    
+Vous pouvez le déployer sur un web-browser (si on ne souhaite pas le déployer sur son téléphone) avec la commande `ionic serve`. Si vous souhaitez le déployer sur son téléphone, il suffit d'effectuer la commande suivante :
 <br />
 `ionic run android` pour un téléphone sous Android. Si aucun téléphone n'est connecté à l'appareil, l'application se lance sur un émulateur Android. <br />
 Pour un téléphone sous iOS, il faut créer un compte <i>Apple Developer</i>(cela est cependant payant et coûte $99 par an).
