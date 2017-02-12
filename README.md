@@ -66,7 +66,6 @@ Depuis l'application client, il est possible de :
 <li> Localisation GPS du client en utilisant les capteurs du téléphone. </li>
 <li> Chat utilisant les web sockets pour une communication en temps réel. </li>
 <li> Possibilité d'upload des images du téléphone vers le serveur. </li>
-<li> Un serveur web avec une interface responsive. </li>
 <li> Un client cross-platform. </li>
 <li> Un serveur déployé sur Heroku pour pouvoir y accéder depuis n'importe quel réseau, et donc en extérieur avec la 4G. </li>
 </ul>
